@@ -14,7 +14,7 @@ A middleware framework for Deno's http serve.Transplanted from Koa
 
 
 
-## ⚡️ Quick start
+## ⚡️Quick start
 
 
 ```js
@@ -29,3 +29,8 @@ app.use(async ctx => {
 
 app.listen({ port: 8000 });
 ```
+
+
+## ⚠️ License
+
+[MIT](https://github.com/JohannLai/doa/blob/master/LICENSE)
