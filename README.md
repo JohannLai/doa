@@ -8,6 +8,24 @@
 [![tag](https://img.shields.io/badge/deno->=1.0.5-green.svg)](https://github.com/denoland/deno)
 [![tag](https://img.shields.io/badge/std-0.54.0-green.svg)](https://github.com/denoland/deno)
 
-Doa middleware framework for deno
+A middleware framework for Deno's http serve.Transplanted from Koa
 
 </div>
+
+
+
+## ⚡️ Quick start
+
+
+```js
+import {
+  App
+} from "https://deno.land/x/gh:johannlai:doa/mod.ts";
+
+app.use(async ctx => {
+  ctx.status = 200;
+  ctx.body = 'Hello World';
+});
+
+app.listen({ port: 8000 });
+```
