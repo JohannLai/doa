@@ -7,11 +7,19 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest, macos-latest]
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: denolib/setup-deno@master
+      - name: clone repository
+        uses: actions/checkout@v2
+      - name: download deno
+        uses: denolib/setup-deno@master
         with:
-          deno-version: 1.0.5
+          deno-version: v1.1.0
       - run: deno --version
+      - name: check format
+        run: deno fmt --check
+
+      - name: run tests
+        run: deno test --allow-read --allow-write
+
