@@ -3,13 +3,13 @@ import {
   ServerRequest,
   STATUS_TEXT,
   createError,
-  getCookies
+  getCookies,
 } from "./deps.ts";
 import { Request } from "./request.ts";
 import { Response } from "./response.ts";
 import { delegates } from "./utils/delegates.ts";
 
-const COOKIES = Symbol('context#cookies');
+const COOKIES = Symbol("context#cookies");
 
 export class Context {
   [key: string]: any
@@ -148,11 +148,10 @@ export class Context {
     let statusCode = err.status || err.statusCode;
 
     // ENOENT support
-    if ("ENOENT" === err.code){
-      statusCode = 404
-    };
+    if ("ENOENT" === err.code) {
+      statusCode = 404;
+    } // default to 500
 
-    // default to 500
     if (
       "number" !== typeof statusCode ||
       !STATUS_TEXT.has(statusCode)
@@ -169,7 +168,7 @@ export class Context {
 
   get cookies() {
     if (!this[COOKIES]) {
-      this[COOKIES] =  getCookies(this.req);
+      this[COOKIES] = getCookies(this.req);
     }
     return this[COOKIES];
   }
