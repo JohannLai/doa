@@ -4,13 +4,12 @@ import {
   HTTPSOptions,
   HTTPOptions,
   Server,
-  Response as ServerResponse,
 } from "./deps.ts";
 import { Request } from "./request.ts";
 import { Response } from "./response.ts";
 import { Middleware } from "./@types/koa.d.ts";
 import { Context } from "./context.ts";
-import { compose, ComposedMiddleware } from "./compose.ts";
+import { compose } from "./compose.ts";
 import { statusEmpty } from "./utils/statusEmpty.ts";
 import { byteLength } from "./utils/byteLength.ts";
 import { isReader } from "./utils/isReader.ts";
@@ -66,8 +65,7 @@ export class App {
 
   private handleRequest(ctx: Context, fnMiddleware: any) {
     ctx.res.status = 404;
-    // @todo: handle error
-    const onerror = (err: Error) => console.error(err);
+    const onerror = (err: Error) => ctx.onerror(err);
     const handleResponse = () => this.respond(ctx);
 
     return fnMiddleware(ctx).then(handleResponse).catch(onerror);
