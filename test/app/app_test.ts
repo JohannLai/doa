@@ -2,7 +2,7 @@ import {
   App,
 } from "../../mod.ts";
 import {
-  assertEquals
+  assertEquals,
 } from "../deps.ts";
 
 Deno.test("app should works", async function () {
