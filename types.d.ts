@@ -10,7 +10,7 @@ export type HTTPMethods =
   | "POST"
   | "DELETE";
 
-  export type DefaultStateExtends = any;
+export type DefaultStateExtends = any;
 /**
  * This interface can be augmented by users to add types to Koa's default state
  */
