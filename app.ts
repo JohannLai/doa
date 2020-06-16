@@ -7,7 +7,8 @@ import {
 } from "./deps.ts";
 import { Request } from "./request.ts";
 import { Response } from "./response.ts";
-import { Middleware } from "./@types/koa.d.ts";
+// import { Middleware } from "./@types/koa.d.ts";
+import { Middleware } from "./types.d.ts";
 import { Context } from "./context.ts";
 import { compose } from "./compose.ts";
 import { statusEmpty } from "./utils/statusEmpty.ts";
