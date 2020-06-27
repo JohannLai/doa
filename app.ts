@@ -117,7 +117,7 @@ export class App {
       }
       ctx.type = "text";
       ctx.length = byteLength(body);
-      console.log(`respond: default null reponse: `, ctx.res);
+      console.log(`respond: default null response: `, ctx.res);
       return ctx.req.respond(Object.assign({}, ctx.res.toJSON(), { body }));
     }
 
