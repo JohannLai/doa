@@ -18,7 +18,6 @@ app.use(async (ctx, next) => {
 });
 
 // response
-
 app.use(async (ctx) => {
   ctx.status = 200;
   ctx.set("x-user-name", "johann");
