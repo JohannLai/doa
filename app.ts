@@ -4,6 +4,7 @@ import {
   HTTPSOptions,
   HTTPOptions,
   Server,
+  EventEmitter,
 } from "./deps.ts";
 import { Request } from "./request.ts";
 import { Response } from "./response.ts";
@@ -14,9 +15,10 @@ import { statusEmpty } from "./utils/statusEmpty.ts";
 import { byteLength } from "./utils/byteLength.ts";
 import { isReader } from "./utils/isReader.ts";
 
-export class App {
+export class App extends EventEmitter {
   server: Server | undefined;
   middleware: Middleware[] = [];
+  silent: undefined | boolean = undefined;
 
   public async listen(
     options?: number | string | HTTPOptions | HTTPSOptions,
@@ -50,10 +52,25 @@ export class App {
       }
     } catch (error) {
       this.server.close();
-      throw new Error(error);
+      if (!this.listenerCount("error")) this.on("error", this.onerror);
+      console.error(error);
     }
 
     return this.server;
+  }
+
+  onerror(err: any): void {
+    if (!(err instanceof Error)) {
+      throw new TypeError(`non-error thrown: ${JSON.stringify(err)}`);
+    }
+
+    if (404 === (err as any).status || (err as any).expose) return;
+    if (this.silent) return;
+
+    const msg = err.stack || err.toString();
+    console.error();
+    console.error(msg.replace(/^/gm, "  "));
+    console.error();
   }
 
   public use(fn: Middleware): App {

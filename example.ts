@@ -24,4 +24,8 @@ app.use(async (ctx) => {
   ctx.body = "Hello World";
 });
 
+app.on("error", (err: any) => {
+  console.error("server error", err);
+});
+
 await app.listen({ port: 8000 });

@@ -132,6 +132,8 @@ export class Context {
       headerSent = (err as any).headerSent = true;
     }
 
+    this.app.emit("error", err, this);
+
     // nothing we can do here other
     // than delegate to the app-level
     // handler and log.
@@ -150,7 +152,7 @@ export class Context {
     // ENOENT support
     if ("ENOENT" === err.code) {
       statusCode = 404;
-    } // default to 500
+    }
 
     if (
       "number" !== typeof statusCode ||
@@ -163,7 +165,8 @@ export class Context {
     const code = STATUS_TEXT.get(statusCode);
     const msg = err.expose ? err.message : code;
     this.status = err.status = statusCode;
-    this.req.respond(Object.assign({}, this.res, { body: msg }));
+
+    this.req.respond(Object.assign({}, this.res.toJSON(), { body: msg }));
   }
 
   get cookies() {
