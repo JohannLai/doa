@@ -3,7 +3,6 @@ import { App } from "./app.ts";
 const app = new App();
 
 // logger
-
 app.use(async (ctx, next) => {
   await next();
   const rt = ctx.response.get("X-Response-Time");
@@ -11,7 +10,6 @@ app.use(async (ctx, next) => {
 });
 
 // x-response-time
-
 app.use(async (ctx, next) => {
   const start = Date.now();
   await next();

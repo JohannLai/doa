@@ -47,8 +47,6 @@ export class App {
         const ctx = new Context(this, request, req, res);
 
         this.handleRequest(ctx, fnMiddleware);
-
-        ctx.req.respond({ status: 200, body: "<h1>Hello World</h1>" });
       }
     } catch (error) {
       this.server.close();
