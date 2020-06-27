@@ -36,25 +36,25 @@ export class App {
 
     this.server = isTls ? serveTLS(options as HTTPSOptions) : serve(options);
 
-    // try {
-    const fnMiddleware = compose(this.middleware);
+    try {
+      const fnMiddleware = compose(this.middleware);
 
-    for await (const request of this.server) {
-      const req = new Request(request);
-      const res = new Response({
-        headers: new Headers(),
-      });
+      for await (const request of this.server) {
+        const req = new Request(request);
+        const res = new Response({
+          headers: new Headers(),
+        });
 
-      const ctx = new Context(this, request, req, res);
+        const ctx = new Context(this, request, req, res);
 
-      this.handleRequest(ctx, fnMiddleware);
+        this.handleRequest(ctx, fnMiddleware);
 
-      // ctx.req.respond({ status: 200, body: "<h1>Hello World</h1>" });
+        ctx.req.respond({ status: 200, body: "<h1>Hello World</h1>" });
+      }
+    } catch (error) {
+      this.server.close();
+      throw new Error(error);
     }
-    // } catch (error) {
-    //   this.server.close();
-    //   throw new Error(error);
-    // }
 
     return this.server;
   }
