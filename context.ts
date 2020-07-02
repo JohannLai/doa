@@ -137,7 +137,7 @@ export class Context {
     if (null == err) return;
 
     if (!(err instanceof Error)) {
-      err = new Error(`non-error thrown: ${JSON.stringify(err)}`);
+      err = new TypeError(`non-error thrown: ${err}`);
     }
 
     let headerSent = false;

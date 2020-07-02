@@ -19,6 +19,7 @@ export class App extends EventEmitter {
   server: Server | undefined;
   middleware: Middleware[] = [];
   silent: undefined | boolean = undefined;
+  subdomainOffset?: number;
 
   public listen(
     options?: number | string | HTTPOptions | HTTPSOptions,
@@ -59,7 +60,7 @@ export class App extends EventEmitter {
 
   onerror(err: any): void {
     if (!(err instanceof Error)) {
-      throw new TypeError(`non-error thrown: ${JSON.stringify(err)}`);
+      throw new TypeError(`non-error thrown: ${err}`);
     }
 
     if (404 === (err as any).status || (err as any).expose) return;

@@ -3,7 +3,8 @@ import {
   assert,
   assertEquals,
   assertStrictEquals,
-  assertThrowsAsync,
+  assertThrows,
+  assertThrowsAsync
 } from "./test_deps.ts";
 import {
   App,
@@ -65,3 +66,6 @@ test({
       .expect(404);
   },
 });
+
+
+
