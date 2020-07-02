@@ -36,20 +36,14 @@ export class App extends EventEmitter {
       typeof (options as HTTPSOptions).certFile !== "undefined";
 
     this.server = isTls ? serveTLS(options as HTTPSOptions) : serve(options);
-
-    try {
-      this.handle(this.server);
-    } catch (error) {
-      this.server.close();
-      if (!this.listenerCount("error")) this.on("error", this.onerror);
-      console.error(error);
-    }
-
+    this.handle(this.server);
     return this.server;
   }
 
   private async handle(server: Server): Promise<void> {
     const fnMiddleware = compose(this.middleware);
+
+    if (!this.listenerCount("error")) this.on("error", this.onerror);
 
     for await (const request of server) {
       const req = new Request(request);

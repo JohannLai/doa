@@ -19,18 +19,49 @@ test({
 });
 
 test({
-  name: "construct App()",
+  name: "app.use(fn)",
   async fn() {
-    const body = "Hello, World";
     const app = new App();
-    app.use((ctx) => {
-      ctx.status = 200;
-      ctx.body = body;
+    const calls: number[] = [];
+
+    app.use((ctx, next) => {
+      calls.push(1);
+      return next().then(() => {
+        calls.push(6);
+      });
+    });
+
+    app.use((ctx, next) => {
+      calls.push(2);
+      return next().then(() => {
+        calls.push(5);
+      });
+    });
+
+    app.use((ctx, next) => {
+      calls.push(3);
+      return next().then(() => {
+        calls.push(4);
+      });
     });
 
     await superdeno(app)
       .get("/")
-      .expect(200)
-      .expect(body);
+      .expect(404);
+
+    assertEquals(calls, [1, 2, 3, 4, 5, 6]);
+  },
+});
+
+test({
+  name: "should catch thrown errors in non-async functions",
+  async fn() {
+    const app = new App();
+
+    app.use((ctx) => ctx.throw("Not Found", 404));
+
+    await superdeno(app)
+      .get("/")
+      .expect(404);
   },
 });

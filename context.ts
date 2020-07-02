@@ -112,10 +112,23 @@ export class Context {
    *
    *    this.throw(403)
    *    this.throw(400, 'name required')
-   *    this.throw(400, 'name required', {text: "error"})
+   *    this.throw('something exploded')
+   *    this.throw(new Error('invalid'))
+   *    this.throw(400, new Error('invalid'))
    *
    */
-  throw(status: number, message?: string, props?: any): never {
+  throw(...args: any[]): never {
+    let status, message, props;
+
+    switch (typeof args[0]) {
+      case "number":
+        ([status, message, props] = args);
+        break;
+      case "string":
+        ([message, status, props] = args);
+        break;
+    }
+
     throw createError(status, message, props);
   }
 
