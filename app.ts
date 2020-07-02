@@ -20,9 +20,9 @@ export class App extends EventEmitter {
   middleware: Middleware[] = [];
   silent: undefined | boolean = undefined;
 
-  public async listen(
+  public listen(
     options?: number | string | HTTPOptions | HTTPSOptions,
-  ): Promise<Server> {
+  ): Server {
     switch (typeof options) {
       case "undefined":
         options = { port: 80 };
@@ -38,18 +38,7 @@ export class App extends EventEmitter {
     this.server = isTls ? serveTLS(options as HTTPSOptions) : serve(options);
 
     try {
-      const fnMiddleware = compose(this.middleware);
-
-      for await (const request of this.server) {
-        const req = new Request(request);
-        const res = new Response({
-          headers: new Headers(),
-        });
-
-        const ctx = new Context(this, request, req, res);
-
-        this.handleRequest(ctx, fnMiddleware);
-      }
+      this.handle(this.server);
     } catch (error) {
       this.server.close();
       if (!this.listenerCount("error")) this.on("error", this.onerror);
@@ -57,6 +46,21 @@ export class App extends EventEmitter {
     }
 
     return this.server;
+  }
+
+  private async handle(server: Server): Promise<void> {
+    const fnMiddleware = compose(this.middleware);
+
+    for await (const request of server) {
+      const req = new Request(request);
+      const res = new Response({
+        headers: new Headers(),
+      });
+
+      const ctx = new Context(this, request, req, res);
+
+      this.handleRequest(ctx, fnMiddleware);
+    }
   }
 
   onerror(err: any): void {

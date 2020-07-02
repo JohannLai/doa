@@ -19,7 +19,6 @@ jobs:
       - run: deno --version
       - name: check format
         run: deno fmt --check
-
-      # - name: run tests
-      #   run: deno test --allow-read --allow-write --allow-net
+      - name: run tests
+        run: deno test --allow-read --allow-write --allow-net
 
