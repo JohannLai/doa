@@ -5,6 +5,9 @@ import {
   encodeUrl,
   contentType,
   is,
+  acceptable,
+  acceptWebSocket,
+  WebSocket,
   Response as ServerResponse,
 } from "./deps.ts";
 import { isReader } from "./utils/isReader.ts";
@@ -15,11 +18,12 @@ import { byteLength } from "./utils/byteLength.ts";
 export class Response {
   #ServerResponse: ServerResponse;
   #explicitStatus: Boolean = false;
+  #socket?: WebSocket;
 
-  // get socket(): Deno.Conn {
-  //   // @todo
-  //   return;
-  // }
+  // @todo
+  get socket(): WebSocket | undefined {
+    return this.#socket;
+  }
 
   /**
    * Get/Set response status code.
