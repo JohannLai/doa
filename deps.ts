@@ -7,7 +7,10 @@ export {
   ServerRequest,
   Response,
 } from "https://deno.land/std@0.59.0/http/server.ts";
-export { Status, STATUS_TEXT } from "https://deno.land/std@0.59.0/http/mod.ts";
+export {
+  Status,
+  STATUS_TEXT,
+} from "https://deno.land/std@0.57.0/http/http_status.ts";
 export { encoder } from "https://deno.land/std@0.59.0/encoding/utf8.ts";
 export {
   getCookies,
