@@ -397,6 +397,7 @@ export class Request {
     if (!this.#serverRequest) return;
     return this.toJSON();
   }
+
   /**
    * Return JSON representation.
    */
