@@ -19,8 +19,6 @@ import { isReader } from "./utils/isReader.ts";
 
 interface ApplicationOptions {
   proxy?: boolean;
-  proxyIpHeader?: string;
-  maxIpsCount?: number;
   env?: string;
 }
 
@@ -29,8 +27,6 @@ export class App extends EventEmitter {
   middleware: Middleware[] = [];
   silent: undefined | boolean = undefined;
   proxy: boolean = false;
-  proxyIpHeader: string = "X-Forwarded-For";
-  maxIpsCount: number = 0;
   env: string = "development";
   context: Context;
   request: Request;
@@ -38,16 +34,10 @@ export class App extends EventEmitter {
 
   constructor(options?: ApplicationOptions) {
     super();
+
     if (options) {
-      if (options.proxy) {
-        this.proxy = options.proxy;
-      }
-      if (options.proxyIpHeader) {
-        this.proxyIpHeader = options.proxyIpHeader;
-      }
-      if (options.maxIpsCount) {
-        this.maxIpsCount = options.maxIpsCount;
-      }
+      this.proxy = options.proxy ?? false;
+
       if (options.env) {
         this.env = options.env;
       } else if (Deno.env.get("DENO_ENV") !== undefined) {
