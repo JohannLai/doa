@@ -5,6 +5,8 @@ import {
   HTTPOptions,
   Server,
   EventEmitter,
+  ServerRequest,
+  Response as ServerResponse,
 } from "./deps.ts";
 import { Request } from "./request.ts";
 import { Response } from "./response.ts";
@@ -15,11 +17,53 @@ import { statusEmpty } from "./utils/statusEmpty.ts";
 import { byteLength } from "./utils/byteLength.ts";
 import { isReader } from "./utils/isReader.ts";
 
+interface ApplicationOptions {
+  proxy?: boolean;
+  proxyIpHeader?: string;
+  maxIpsCount?: number;
+  env?: string;
+  subdomainOffset?: number;
+}
+
 export class App extends EventEmitter {
   server: Server | undefined;
   middleware: Middleware[] = [];
   silent: undefined | boolean = undefined;
   subdomainOffset?: number;
+  proxy: boolean = false;
+  proxyIpHeader: string = "X-Forwarded-For";
+  maxIpsCount: number = 0;
+  env: string = "development";
+  context: Context;
+  request: Request;
+  response: Response;
+
+  constructor(options?: ApplicationOptions) {
+    super();
+    if (options) {
+      if (options.proxy) {
+        this.proxy = options.proxy;
+      }
+      if (options.proxyIpHeader) {
+        this.proxyIpHeader = options.proxyIpHeader;
+      }
+      if (options.maxIpsCount) {
+        this.maxIpsCount = options.maxIpsCount;
+      }
+      if (options.env) {
+        this.env = options.env;
+      } else if (Deno.env.get("DENO_ENV") !== undefined) {
+        this.env = Deno.env.get("DENO_ENV")!;
+      }
+      if (options.subdomainOffset) {
+        this.subdomainOffset = options.subdomainOffset || 2;
+      }
+    }
+
+    this.context = Object.create(Context);
+    this.request = Object.create(Request);
+    this.response = Object.create(Response);
+  }
 
   public listen(
     options?: number | string | HTTPOptions | HTTPSOptions,
@@ -52,7 +96,10 @@ export class App extends EventEmitter {
         headers: new Headers(),
       });
 
-      const ctx = new Context(this, request, req, res);
+      const ctx = Object.assign(
+        new Context(this, request, req, res),
+        this.context,
+      );
 
       this.handleRequest(ctx, fnMiddleware);
     }
