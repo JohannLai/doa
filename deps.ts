@@ -1,4 +1,4 @@
-// This file contains the external dependencies that doa depends upon
+// This file contains the external dependencies that doa depends upon.
 
 // `std` dependencies
 export {
