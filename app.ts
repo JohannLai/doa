@@ -22,14 +22,12 @@ interface ApplicationOptions {
   proxyIpHeader?: string;
   maxIpsCount?: number;
   env?: string;
-  subdomainOffset?: number;
 }
 
 export class App extends EventEmitter {
   server: Server | undefined;
   middleware: Middleware[] = [];
   silent: undefined | boolean = undefined;
-  subdomainOffset?: number;
   proxy: boolean = false;
   proxyIpHeader: string = "X-Forwarded-For";
   maxIpsCount: number = 0;
@@ -54,9 +52,6 @@ export class App extends EventEmitter {
         this.env = options.env;
       } else if (Deno.env.get("DENO_ENV") !== undefined) {
         this.env = Deno.env.get("DENO_ENV")!;
-      }
-      if (options.subdomainOffset) {
-        this.subdomainOffset = options.subdomainOffset || 2;
       }
     }
 

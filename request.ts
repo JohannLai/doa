@@ -215,26 +215,6 @@ export class Request {
   }
 
   /**
-   * Return subdomains as an array.
-   *
-   * Subdomains are the dot-separated parts of the host before the main domain
-   * of the app. By default, the domain of the app is assumed to be the last two
-   * parts of the host. This can be changed by setting `app.subdomainOffset`.
-   *
-   * For example, if the domain is "tobi.ferrets.example.com":
-   * If `app.subdomainOffset` is not set, this.subdomains is
-   * `["ferrets", "tobi"]`.
-   * If `app.subdomainOffset` is 3, this.subdomains is `["tobi"]`.
-   */
-  get subdomains(): string[] {
-    let hostname = this.#url.hostname;
-
-    if (!hostname) return [];
-
-    return !isIP(hostname) ? hostname.split(".").reverse() : [hostname];
-  }
-
-  /**
    * Short-hand for:
    *
    * this.protocol == 'https'
