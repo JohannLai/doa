@@ -113,7 +113,7 @@ export function compose(middleware: Function[]) {
   return function (context: any, next?: Next) {
     // last called middleware #
     let index = -1;
-    return dispatch(0);
+
     function dispatch(i: number): Promise<any> {
       if (i <= index) {
         return Promise.reject(new Error("next() called multiple times"));
@@ -128,6 +128,8 @@ export function compose(middleware: Function[]) {
         return Promise.reject(err);
       }
     }
+
+    return dispatch(0);
   };
 }
 
