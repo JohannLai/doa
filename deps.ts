@@ -1,7 +1,6 @@
 // This file contains the external dependencies that doa depends upon
 
 // `std` dependencies
-
 export {
   serve,
   serveTLS,
@@ -41,7 +40,7 @@ export {
 export {
   is,
   typeofrequest,
-  hasBody
+  hasBody,
 } from "https://deno.land/x/type_is/mod.ts";
 export { vary, append } from "https://deno.land/x/vary/mod.ts";
 export { encodeUrl } from "https://deno.land/x/encodeurl/mod.ts";
