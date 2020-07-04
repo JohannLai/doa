@@ -65,6 +65,6 @@ await app.listen({ port: 8000 });
 
 ```
 
-## ⚠️ License
+## License
 
 [MIT](https://github.com/JohannLai/doa/blob/master/LICENSE)
