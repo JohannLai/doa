@@ -8,7 +8,7 @@
 [![tag](https://img.shields.io/badge/deno->=1.1.0-green.svg)](https://github.com/denoland/deno)
 [![tag](https://img.shields.io/badge/std-0.59.0-green.svg)](https://github.com/denoland/deno)
 
-A middleware framework for Deno's http serve.Transplanted from Koa
+A middleware framework for Deno's http serve. Transplanted from Koa.
 
 </div>
 
