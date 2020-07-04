@@ -12,8 +12,6 @@ A middleware framework for Deno's http serve.Transplanted from Koa
 
 </div>
 
-
-
 ## ⚡️Quick start
 
 A basic usage, responding to every request with *Hello Workd*;
