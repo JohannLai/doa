@@ -47,7 +47,7 @@ app.listen({ port: 8000 });
 ## Running tests
 
 ```bash
-deno test --allow-read --allow-write --allow-net --allow-hrtime  
+$ deno test --allow-read --allow-write --allow-net --allow-hrtime  
 ```
 
 ## License
