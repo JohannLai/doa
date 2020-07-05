@@ -29,10 +29,15 @@ const TYPE_REGEXP =
 /**
  * Class for MediaType object.
  */
-export interface MediaType {
-  type: string;
-  subtype: string;
-  suffix?: string;
+class MediaType {
+  constructor(
+    /** The type of the media type. */
+    public type: string,
+    /** The subtype of the media type. */
+    public subtype: string,
+    /** The optional suffix of the media type. */
+    public suffix?: string,
+  ) {}
 }
 
 /**
@@ -42,41 +47,26 @@ export interface MediaType {
  * @return {string}
  */
 export function format(obj: MediaType): string {
-  const subtype = obj.subtype;
-  const suffix = obj.suffix;
-  const type = obj.type;
+  const { subtype, suffix, type } = obj;
 
   if (!TYPE_NAME_REGEXP.test(type)) {
-    throw new TypeError("invalid type");
+    throw new TypeError("Invalid type.");
   }
-
   if (!SUBTYPE_NAME_REGEXP.test(subtype)) {
-    throw new TypeError("invalid subtype");
+    throw new TypeError("Invalid subtype.");
   }
 
-  // format as type/subtype
-  let string = type + "/" + subtype;
+  let str = `${type}/${subtype}`;
 
-  // append +suffix
   if (suffix) {
     if (!TYPE_NAME_REGEXP.test(suffix)) {
-      throw new TypeError("invalid suffix");
+      throw new TypeError("Invalid suffix.");
     }
 
-    string += "+" + suffix;
+    str += `+${suffix}`;
   }
 
-  return string;
-}
-
-/**
- * Test media type.
- *
- * @param {string} string
- * @return {boolean}
- */
-export function test(string: string): boolean {
-  return TYPE_REGEXP.test(string.toLowerCase());
+  return str;
 }
 
 /**
@@ -86,10 +76,8 @@ export function test(string: string): boolean {
  * @return {MediaType}
  */
 export function parse(string: string): MediaType {
-  console.log("stringstring:", string);
-
   const match = TYPE_REGEXP.exec(string.toLowerCase());
-  console.log("matchmatch:", match);
+
   if (!match) {
     throw new TypeError("invalid media type");
   }
@@ -105,16 +93,5 @@ export function parse(string: string): MediaType {
     subtype = subtype.substr(0, index);
   }
 
-  return new MediaTypeImpl(type, subtype, suffix);
-}
-
-class MediaTypeImpl implements MediaType {
-  type: string;
-  subtype: string;
-  suffix?: string;
-  constructor(type: string, subtype: string, suffix?: string) {
-    this.type = type;
-    this.subtype = subtype;
-    this.suffix = suffix;
-  }
+  return new MediaType(type, subtype, suffix);
 }

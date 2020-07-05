@@ -7,7 +7,9 @@
  */
 
 import { lookup, parse } from "../deps.ts";
-import { test } from "./mediaTyper.ts";
+
+const TYPE_REGEXP =
+  /^ *([A-Za-z0-9][A-Za-z0-9!#$&^_-]{0,126})\/([A-Za-z0-9][A-Za-z0-9!#$&^_.+-]{0,126}) *$/;
 
 /**
  * Compare a `value` content-type with `types`.
@@ -187,7 +189,7 @@ function normalizeType(value: string): string | null {
   // parse the type
   const type = parse(value).type;
 
-  if (!test(type)) {
+  if (!TYPE_REGEXP.test(type.toLowerCase())) {
     return null;
   }
 
