@@ -14,6 +14,21 @@ export class Request {
   #serverRequest: ServerRequest;
   #url: URL;
   #memoizedURL: URL | null = null;
+  #proxy: boolean;
+  #secure: boolean;
+
+  constructor(request: ServerRequest, proxy = false, secure = false) {
+    this.#serverRequest = request;
+    this.#proxy = proxy;
+    this.#secure = secure;
+
+    const proto = this.#serverRequest.proto.split("/")[0].toLowerCase();
+    this.#url = new URL(
+      `${proto}://${
+        this.#serverRequest.headers.get("host")
+      }${this.#serverRequest.url}`,
+    );
+  }
 
   get hasBody(): boolean {
     return (
@@ -236,8 +251,9 @@ export class Request {
    * @todo Implement this function.
    */
   get ip(): string {
-    // write me
-    return "";
+    return this.#proxy
+      ? this.ips[0]
+      : (this.#serverRequest.conn.remoteAddr as Deno.NetAddr).hostname;
   }
 
   /**
@@ -250,19 +266,12 @@ export class Request {
    * @todo Implement this function.
    */
   get ips(): string[] {
-    // write me
-    return [];
-  }
-
-  constructor(request: ServerRequest) {
-    this.#serverRequest = request;
-
-    const proto = this.#serverRequest.proto.split("/")[0].toLowerCase();
-    this.#url = new URL(
-      `${proto}://${
-        this.#serverRequest.headers.get("host")
-      }${this.#serverRequest.url}`,
-    );
+    return this.#proxy
+      ? (this.#serverRequest.headers.get("x-forwarded-for") ??
+        (this.#serverRequest.conn.remoteAddr as Deno.NetAddr).hostname).split(
+          /\s*,\s*/,
+        )
+      : [];
   }
 
   /**

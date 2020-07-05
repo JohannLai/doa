@@ -27,6 +27,7 @@ export class App extends EventEmitter {
   middleware: Middleware[] = [];
   silent: undefined | boolean = undefined;
   proxy: boolean = false;
+  secure: boolean = false;
   env: string = "development";
   context: Context;
   request: Request;
@@ -66,6 +67,7 @@ export class App extends EventEmitter {
       typeof (options as HTTPSOptions).certFile !== "undefined";
 
     this.server = isTls ? serveTLS(options as HTTPSOptions) : serve(options);
+    this.secure = isTls;
     this.handle(this.server);
     return this.server;
   }
@@ -76,7 +78,7 @@ export class App extends EventEmitter {
     if (!this.listenerCount("error")) this.on("error", this.onerror);
 
     for await (const request of server) {
-      const req = new Request(request);
+      const req = new Request(request, this.proxy, this.secure);
       const res = new Response({
         headers: new Headers(),
       });
