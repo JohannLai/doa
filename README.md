@@ -14,7 +14,7 @@ A middleware framework for Deno's http serve. Transplanted from Koa.
 
 ## ⚡️Quick start
 
-A basic usage, responding to every request with *Hello Workd*;
+A basic usage, responding to every request with *Hello World*;
 ```js
 import { App } from "https://deno.land/x/gh:johannlai:doa/mod.ts";
 
