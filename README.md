@@ -44,6 +44,12 @@ app.use(async ctx => {
 app.listen({ port: 8000 });
 ```
 
+## Running tests
+
+```bash
+deno test --allow-read --allow-write --allow-net --allow-hrtime  
+```
+
 ## License
 
 [MIT](https://github.com/JohannLai/doa/blob/master/LICENSE)
