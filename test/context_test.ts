@@ -5,8 +5,8 @@ import {
   assertStrictEquals,
   assertThrows,
   assertThrowsAsync,
+  superdeno,
 } from "./test_deps.ts";
-import { superdeno } from "https://deno.land/x/superdeno@main/mod.ts";
 import {
   App,
 } from "../mod.ts";

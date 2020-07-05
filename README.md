@@ -5,7 +5,7 @@
 ![Github Action Status](https://github.com/JohannLai/doa/workflows/build/badge.svg)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 [![GitHub license](https://img.shields.io/github/license/JohannLai/doa)](https://github.com/JohannLai/doa/blob/master/LICENSE)
-[![tag](https://img.shields.io/badge/deno->=1.1.0-green.svg)](https://github.com/denoland/deno)
+[![tag](https://img.shields.io/badge/deno->=1.1.3-green.svg)](https://github.com/denoland/deno)
 [![tag](https://img.shields.io/badge/std-0.59.0-green.svg)](https://github.com/denoland/deno)
 
 A middleware framework for Deno's http serve. Transplanted from Koa.

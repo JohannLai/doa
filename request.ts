@@ -2,11 +2,10 @@ import {
   ServerRequest,
   getCookies,
   Cookies,
-  isIP,
-  typeofrequest,
   Accepts,
   parse as contentTypeParse,
 } from "./deps.ts";
+import { typeofrequest } from "./utils/typeIs.ts";
 import { HTTPMethods } from "./types.d.ts";
 
 type Query = { [key: string]: string | string[] };
@@ -15,6 +14,13 @@ export class Request {
   #serverRequest: ServerRequest;
   #url: URL;
   #memoizedURL: URL | null = null;
+
+  get hasBody(): boolean {
+    return (
+      this.headers.get("transfer-encoding") !== null ||
+      !!parseInt(this.headers.get("content-length") ?? "")
+    );
+  }
 
   /**
    * Return request header.

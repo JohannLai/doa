@@ -4,12 +4,9 @@ import {
   vary,
   encodeUrl,
   contentType,
-  is,
-  acceptable,
-  acceptWebSocket,
-  WebSocket,
   Response as ServerResponse,
 } from "./deps.ts";
+import { is } from "./utils/typeIs.ts";
 import { isReader } from "./utils/isReader.ts";
 import { statusEmpty } from "./utils/statusEmpty.ts";
 import { statusRedirect } from "./utils/statusRedirect.ts";
@@ -18,12 +15,11 @@ import { byteLength } from "./utils/byteLength.ts";
 export class Response {
   #ServerResponse: ServerResponse;
   #explicitStatus: Boolean = false;
-  #socket?: WebSocket;
 
   // @todo
-  get socket(): WebSocket | undefined {
-    return this.#socket;
-  }
+  // get socket(): WebSocket | undefined {
+  //   return this.#socket;
+  // }
 
   /**
    * Get/Set response status code.

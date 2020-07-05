@@ -5,6 +5,7 @@ import {
   assertStrictEquals,
   assertThrows,
   assertThrowsAsync,
+  superdeno,
 } from "./test_deps.ts";
 import {
   App,

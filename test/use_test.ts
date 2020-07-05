@@ -5,11 +5,11 @@ import {
   assertStrictEquals,
   assertThrows,
   assertThrowsAsync,
+  superdeno,
 } from "./test_deps.ts";
 import {
   App,
 } from "../mod.ts";
-import { superdeno } from "https://deno.land/x/superdeno@main/mod.ts";
 
 test({
   name: "construct App()",
