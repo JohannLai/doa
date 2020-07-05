@@ -241,7 +241,7 @@ export class Request {
    * this.protocol == 'https'
    */
   get secure(): boolean {
-    return this.protocol === "https";
+    return this.#secure;
   }
 
   /**
