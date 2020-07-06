@@ -16,7 +16,9 @@ A middleware framework for Deno's http serve. Transplanted from Koa.
 
 A basic usage, responding to every request with *Hello World*;
 ```js
-import { App } from "https://deno.land/x/gh:johannlai:doa/mod.ts";
+import { App } from "https://deno.land/x/doa/mod.ts";
+
+const app = new App();
 
 app.use(async ctx => {
   ctx.status = 200;
@@ -31,8 +33,10 @@ Adding middlewares through `app.use(middleware)`, will cause all of the middlewa
 A more complex example with responseTime middleware, which will add `x-response-time` in response header:
 
 ```js
-import { App } from "https://deno.land/x/gh:johannlai:doa/mod.ts";
+import { App } from "https://deno.land/x/doa/mod.ts";
 import { responseTime } from "https://deno.land/x/gh:johannlai:response-time/mod.ts";
+
+const app = new App();
 
 app.use(responseTime());
 
@@ -42,6 +46,7 @@ app.use(async ctx => {
 });
 
 app.listen({ port: 8000 });
+
 ```
 
 ## Running tests
