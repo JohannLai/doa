@@ -28,7 +28,7 @@ app.use(async ctx => {
 app.listen({ port: 8000 });
 ```
 
-Adding middlewares through `app.use(middleware)`, will cause all of the middlewares to be executed upon each request in the specified order. When you call the middleware, it passed the context and next method in the stack
+Adding middlewares through `app.use(middleware)`, will cause all of the middlewares to be executed upon each request in the specified order. When you call the middleware, it passed the context and next method in the stack.
 
 A more complex example with responseTime middleware, which will add `x-response-time` in response header:
 
