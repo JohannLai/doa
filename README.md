@@ -34,7 +34,7 @@ A more complex example with responseTime middleware, which will add `x-response-
 
 ```js
 import { App } from "https://deno.land/x/doa/mod.ts";
-import { responseTime } from "https://deno.land/x/gh:johannlai:response-time/mod.ts";
+import { responseTime } from "https://deno.land/x/response-time/mod.ts";
 
 const app = new App();
 
