@@ -13,8 +13,9 @@ import { statusRedirect } from "./utils/statusRedirect.ts";
 import { byteLength } from "./utils/byteLength.ts";
 
 export class Response {
-  #ServerResponse: ServerResponse;
+  #serverResponse: ServerResponse;
   #explicitStatus: Boolean = false;
+  #writable = true;
 
   // @todo
   // get socket(): WebSocket | undefined {
@@ -25,13 +26,16 @@ export class Response {
    * Get/Set response status code.
    */
   get status(): number {
-    return this.#ServerResponse.status || 200;
+    return this.#serverResponse.status || 200;
   }
 
   set status(code: number) {
-    // @todo: headerSent
+    if (!this.#writable) {
+      throw new Error("The response is not writable.");
+    }
+
     this.#explicitStatus = true;
-    this.#ServerResponse.status = code;
+    this.#serverResponse.status = code;
     if (this.body && statusEmpty[code]) {
       this.body = null;
     }
@@ -52,12 +56,16 @@ export class Response {
    * Get/Set response body.
    */
   get body(): any {
-    return this.#ServerResponse.body || null;
+    return this.#serverResponse.body || null;
   }
 
   set body(val: any) {
-    const original = this.#ServerResponse.body;
-    this.#ServerResponse.body = val;
+    if (!this.#writable) {
+      throw new Error("The response is not writable.");
+    }
+
+    const original = this.#serverResponse.body;
+    this.#serverResponse.body = val;
 
     // no content
     if (null == val) {
@@ -137,16 +145,16 @@ export class Response {
    * Vary on `field`.
    */
   vary(field: string): void {
-    if (!this.#ServerResponse.headers) return;
+    if (!this.#serverResponse.headers) return;
 
-    vary(this.#ServerResponse.headers, field);
+    vary(this.#serverResponse.headers, field);
   }
 
   /**
    * Return response header, alias as response.header
    */
   get header(): Headers {
-    return this.#ServerResponse.headers ?? new Headers();
+    return this.#serverResponse.headers ?? new Headers();
   }
 
   get headers(): Headers {
@@ -195,6 +203,10 @@ export class Response {
   }
 
   set type(type: string) {
+    if (!this.#writable) {
+      throw new Error("The response is not writable.");
+    }
+
     if (type) {
       const _type = contentType(type);
       if (_type) {
@@ -317,7 +329,7 @@ export class Response {
       } else if (typeof val !== "string") {
         val = String(val);
       }
-      this.#ServerResponse.headers?.set(field, val);
+      this.#serverResponse.headers?.set(field, val);
     } else {
       for (const key in field) {
         this.set(key, field[key]);
@@ -332,7 +344,7 @@ export class Response {
    * @todo write this function
    */
   get writable() {
-    return true;
+    return this.#writable;
   }
 
   /**
@@ -365,15 +377,15 @@ export class Response {
   }
 
   public inspect() {
-    if (!this.#ServerResponse) return;
+    if (!this.#serverResponse) return;
     const o = this.toJSON();
     o.body = this.body;
     return o;
   }
 
   public remove(field: string) {
-    if (this.#ServerResponse.headers) {
-      this.#ServerResponse.headers.delete(field);
+    if (this.#serverResponse.headers) {
+      this.#serverResponse.headers.delete(field);
     }
   }
 
@@ -394,7 +406,46 @@ export class Response {
     };
   }
 
+  /** Take this response and convert it to the response used by the Deno net
+   * server.  Calling this will set the response to not be writable.
+   *
+   * Most users will have no need to call this method. */
+  toServerResponse(): ServerResponse {
+    if (this.#serverResponse) {
+      return this.#serverResponse;
+    }
+
+    // If there is a response type, set the content type header
+    if (this.type) {
+      const contentTypeString = contentType(this.type);
+      if (contentTypeString && !this.headers.has("Content-Type")) {
+        this.headers.append("Content-Type", contentTypeString);
+      }
+    }
+
+    const { headers } = this;
+
+    // If there is no body and no content type and no set length, then set the
+    // content length to 0
+    if (
+      !(
+        this.body ||
+        headers.has("Content-Type") ||
+        headers.has("Content-Length")
+      )
+    ) {
+      headers.append("Content-Length", "0");
+    }
+
+    this.#writable = false;
+    return this.#serverResponse = {
+      status: this.status ?? (this.body ? 200 : 404),
+      body: this.body,
+      headers,
+    };
+  }
+
   constructor(response: ServerResponse) {
-    this.#ServerResponse = response;
+    this.#serverResponse = response;
   }
 }

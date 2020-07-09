@@ -121,70 +121,7 @@ export class App extends EventEmitter {
 
   private async respond(
     ctx: Context,
-  ): Promise<void> {
-    if (!ctx.writable) {
-      console.log("respond: ctx.writable === false");
-      return;
-    }
-
-    let body = ctx.body;
-    const code = ctx.status;
-
-    // ignore body
-    if (statusEmpty[code]) {
-      // strip headers
-      ctx.body = null;
-      console.log("respond: empty response");
-      return ctx.req.respond(ctx.res.toJSON());
-    }
-
-    if ("HEAD" === ctx.method) {
-      if (!ctx.response.has("Content-Length")) {
-        const { length } = ctx.response;
-        if (length && Number.isInteger(length)) ctx.length = length;
-      }
-
-      console.log("respond: HEAD response");
-      const _res = Object.assign({}, ctx.res.toJSON(), { body: undefined });
-
-      return ctx.req.respond(_res);
-    }
-
-    // status body
-    if (null == body) {
-      // if (ctx.response._explicitNullBody) {
-      //   ctx.response.remove("Content-Type");
-      //   ctx.response.remove("Transfer-Encoding");
-      //   console.log("respond: explicit null body");
-      //   const _res = Object.assign({}, ctx.res);
-      //   _res.body = undefined;
-      //   return ctx.req.respond(_res);
-      // }
-      if (ctx.req.protoMajor >= 2) {
-        body = String(code);
-      } else {
-        body = ctx.message || String(code);
-      }
-      ctx.type = "text";
-      ctx.length = byteLength(body);
-      console.log(`respond: default null response: `, ctx.res);
-      return ctx.req.respond(Object.assign({}, ctx.res.toJSON(), { body }));
-    }
-
-    // responses
-    if (
-      "string" === typeof body ||
-      body instanceof Uint8Array ||
-      isReader(body)
-    ) {
-      console.log(`respond: string, Uint8Array or Deno.Reader response`);
-      return ctx.req.respond(Object.assign({}, ctx.res.toJSON(), { body }));
-    }
-
-    // body: json
-    body = JSON.stringify(body);
-    ctx.length = byteLength(body);
-
-    return ctx.req.respond(Object.assign({}, ctx.res.toJSON(), { body }));
+  ) {
+    return ctx.req.respond(ctx.res.toServerResponse());
   }
 }
