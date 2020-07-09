@@ -160,24 +160,13 @@ export class Context {
     // force text/plain
     this.type = "text";
 
-    let statusCode = err.status || err.statusCode;
+    const statusCode = this.status = err instanceof Deno.errors.NotFound
+      ? 404
+      : err.status && typeof err.status === "number"
+      ? err.status
+      : 500;
 
-    // ENOENT support
-    if ("ENOENT" === err.code) {
-      statusCode = 404;
-    }
-
-    if (
-      "number" !== typeof statusCode ||
-      !STATUS_TEXT.has(statusCode)
-    ) {
-      statusCode = 500;
-    }
-
-    // respond
-    const code = STATUS_TEXT.get(statusCode);
-    const msg = err.expose ? err.message : code;
-    this.status = err.status = statusCode;
+    const msg = err.expose ? err.message : STATUS_TEXT.get(statusCode);
 
     this.req.respond(Object.assign({}, this.res.toJSON(), { body: msg }));
   }
