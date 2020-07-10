@@ -13,6 +13,8 @@ import { statusRedirect } from "./utils/statusRedirect.ts";
 import { byteLength } from "./utils/byteLength.ts";
 
 export class Response {
+  [key: string]: any
+
   #serverResponse: ServerResponse;
   #explicitStatus: Boolean = false;
   #writable = true;

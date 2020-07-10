@@ -6,10 +6,10 @@ import {
   assertThrows,
   assertThrowsAsync,
   superdeno,
-} from "./test_deps.ts";
+} from "../test_deps.ts";
 import {
   App,
-} from "../mod.ts";
+} from "../../mod.ts";
 
 test({
   name: "construct App()",

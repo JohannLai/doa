@@ -74,9 +74,13 @@ export class App extends EventEmitter {
 
     for await (const request of server) {
       const req = new Request(request, this.proxy, this.secure);
-      const res = new Response({
-        headers: new Headers(),
-      });
+
+      const res = Object.assign(
+        new Response({
+          headers: new Headers(),
+        }),
+        this.response,
+      );
 
       const ctx = Object.assign(
         new Context(this, request, req, res),
