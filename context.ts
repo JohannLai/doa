@@ -51,7 +51,6 @@ export class Context {
       .access("type")
       .access("lastModified")
       .access("etag")
-      .getter("headerSent")
       .getter("writable");
 
     delegates(this, "request").method("acceptsLanguages")
@@ -145,19 +144,7 @@ export class Context {
       err = new TypeError(`non-error thrown: ${err}`);
     }
 
-    let headerSent = false;
-    if (this.headerSent || !this.writable) {
-      headerSent = (err as any).headerSent = true;
-    }
-
     this.app.emit("error", err, this);
-
-    // nothing we can do here other
-    // than delegate to the app-level
-    // handler and log.
-    if (headerSent) {
-      return;
-    }
 
     if (!this.writable) {
       return;
@@ -181,11 +168,20 @@ export class Context {
     // force text/plain
     this.type = "text";
 
-    const statusCode = this.status = err instanceof Deno.errors.NotFound
-      ? 404
-      : err.status && typeof err.status === "number"
-      ? err.status
-      : 500;
+    const getStatusCode = (err: any) => {
+      switch (true) {
+        case err instanceof Deno.errors.NotFound:
+          return 404;
+        case err.status && typeof err.status === "number":
+          return err.status;
+        case err.statusCode && typeof err.statusCode === "number":
+          return err.statusCode;
+        default:
+          return 500;
+      }
+    };
+
+    const statusCode = this.status = getStatusCode(err);
 
     this.body = err.expose ? err.message : STATUS_TEXT.get(statusCode);
 

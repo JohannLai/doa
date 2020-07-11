@@ -95,3 +95,25 @@ test({
       });
   },
 });
+
+test({
+  name: "should set status specified in the error using statusCode",
+  async fn() {
+    const app = new App();
+
+    app.use((ctx, next) => {
+      ctx.body = "something else";
+      const err = new Error("Not found") as any;
+      err.status = 404;
+      throw err;
+    });
+
+    const server = app.listen();
+
+    await superdeno(server)
+      .get("/")
+      .expect(404)
+      .expect("Content-Type", "text/plain; charset=utf-8")
+      .expect("Not Found");
+  },
+});

@@ -136,14 +136,6 @@ export class Response {
   }
 
   /**
-   * Check if a header has been written to the socket.
-   * @todo to write headerSent function
-   */
-  get headerSent(): Boolean {
-    return false;
-  }
-
-  /**
    * Vary on `field`.
    */
   vary(field: string): void {
@@ -331,8 +323,6 @@ export class Response {
    *
    */
   set(field: any, val?: any) {
-    if (this.headerSent) return;
-
     if (2 === arguments.length) {
       if (Array.isArray(val)) {
         val = val.map((v) => typeof v === "string" ? v : String(v));
