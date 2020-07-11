@@ -84,6 +84,9 @@ export class App extends EventEmitter {
 
       const ctx = Object.assign(
         new Context(this, request, req, res),
+        {
+          state: {},
+        },
         this.context,
       );
 
@@ -121,6 +124,6 @@ export class App extends EventEmitter {
   private async respond(
     ctx: Context,
   ) {
-    return ctx.req.respond(ctx.res.toServerResponse());
+    return ctx.req.respond(ctx.response.toServerResponse());
   }
 }

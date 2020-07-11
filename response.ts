@@ -163,6 +163,14 @@ export class Response {
     return this.header;
   }
 
+  /** Headers that will be returned in the response. */
+  set headers(value: Headers) {
+    if (!this.#writable) {
+      throw new Error("The response is not writable.");
+    }
+    this.headers = value;
+  }
+
   /**
    * Perform a 302 redirect to `url`.
    *

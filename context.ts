@@ -115,7 +115,13 @@ export class Context {
    *    this.throw('something exploded')
    *    this.throw(new Error('invalid'))
    *    this.throw(400, new Error('invalid'))
+   *    * See: https://github.com/jshttp/http-errors
    *
+   *    Note: `status` should only be passed as the first parameter.
+   *
+   *    @param {String|Number|Error} err, msg or status
+   *    @param {String|Number|Error} [err, msg or status]
+   *    @param {Object} [props]
    */
   throw(...args: any[]): never {
     let status, message, props;
@@ -133,7 +139,6 @@ export class Context {
   }
 
   onerror(err?: any) {
-    // don't do anything if there is no error.
     if (null == err) return;
 
     if (!(err instanceof Error)) {
@@ -154,8 +159,24 @@ export class Context {
       return;
     }
 
+    if (!this.writable) {
+      return;
+    }
+
+    const headerKeys: string[] = [];
+    this.response.headers.forEach((value, key) => {
+      headerKeys.push(key);
+    });
+    headerKeys.forEach((key) => {
+      this.remove(key);
+    });
+
     // then set those specified
-    this.set(err.headers);
+    if (err.headers && err.headers instanceof Headers) {
+      for (const [key, value] of err.headers) {
+        this.set(key, value);
+      }
+    }
 
     // force text/plain
     this.type = "text";
@@ -166,9 +187,9 @@ export class Context {
       ? err.status
       : 500;
 
-    const msg = err.expose ? err.message : STATUS_TEXT.get(statusCode);
+    this.body = err.expose ? err.message : STATUS_TEXT.get(statusCode);
 
-    this.req.respond(Object.assign({}, this.res.toJSON(), { body: msg }));
+    this.req.respond(this.response.toServerResponse());
   }
 
   get cookies() {
