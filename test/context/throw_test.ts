@@ -25,15 +25,11 @@ interface MockServerOptions {
   url?: string;
 }
 
-function createMockServerRequest(
-  {
-    url = "/",
-    proto = "HTTP/1.1",
-    headers: headersInit = [
-      ["cache-control", "public, max-age=0, s-maxage=300"],
-    ],
-  }: MockServerOptions = {},
-): ServerRequest {
+function createMockServerRequest({
+  url = "/",
+  proto = "HTTP/1.1",
+  headers: headersInit = [["cache-control", "max-age=0"]],
+}: MockServerOptions = {}): ServerRequest {
   const headers = new Headers(headersInit);
   return {
     conn: {
