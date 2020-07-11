@@ -51,11 +51,44 @@ test({
 
     const server = app.listen();
 
-    const res = await superdeno(server)
+    await superdeno(server)
       .get("/")
       .expect(418)
       .expect("Content-Type", "text/plain; charset=utf-8")
       .expect("Content-Length", "4")
+      .expect((res) => {
+        assertEquals(res.headers.hasOwnProperty("vary"), false);
+        assertEquals(res.headers.hasOwnProperty("x-csrf-token"), false);
+      });
+  },
+});
+
+test({
+  name: "should set headers specified in the error",
+  async fn() {
+    const app = new App();
+
+    app.use((ctx, next) => {
+      ctx.set("Vary", "Accept-Encoding");
+      ctx.set("X-CSRF-Token", "asdf");
+      ctx.body = "response";
+
+      throw Object.assign(new Error("boom"), {
+        status: 418,
+        expose: true,
+        headers: {
+          "X-New-Header": "Value",
+        },
+      });
+    });
+
+    const server = app.listen();
+
+    await superdeno(server)
+      .get("/")
+      .expect(418)
+      .expect("Content-Type", "text/plain; charset=utf-8")
+      .expect("X-New-Header", "Value")
       .expect((res) => {
         assertEquals(res.headers.hasOwnProperty("vary"), false);
         assertEquals(res.headers.hasOwnProperty("x-csrf-token"), false);

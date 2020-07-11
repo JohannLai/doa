@@ -172,10 +172,10 @@ export class Context {
     });
 
     // then set those specified
-    if (err.headers && err.headers instanceof Headers) {
-      for (const [key, value] of err.headers) {
-        this.set(key, value);
-      }
+    if (err.headers) {
+      Object.keys(err.headers).forEach((key) => {
+        this.set(key, err.headers[key]);
+      });
     }
 
     // force text/plain
