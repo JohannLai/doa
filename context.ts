@@ -141,7 +141,8 @@ export class Context {
     if (null == err) return;
 
     if (!(err instanceof Error)) {
-      err = new TypeError(`non-error thrown: ${err}`);
+      err = typeof err === "object" ? JSON.stringify(err) : err;
+      err = new Error(`non-error thrown: ${err}`);
     }
 
     this.app.emit("error", err, this);
@@ -170,11 +171,12 @@ export class Context {
 
     const getStatusCode = (err: any) => {
       switch (true) {
-        case err instanceof Deno.errors.NotFound:
+        case err instanceof Deno.errors.NotFound || "ENOENT" === err.code:
           return 404;
-        case err.status && typeof err.status === "number":
+        case err.status && typeof err.status === "number" && err.status <= 500:
           return err.status;
-        case err.statusCode && typeof err.statusCode === "number":
+        case err.statusCode && typeof err.statusCode === "number" &&
+          err.status <= 500:
           return err.statusCode;
         default:
           return 500;

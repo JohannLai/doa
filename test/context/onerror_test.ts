@@ -119,7 +119,7 @@ test({
 });
 
 test({
-  name: "when invalid err.statusCode not number, should respond 500",
+  name: "when invalid err.statusCode, not number, should respond 500",
   async fn() {
     const app = new App();
 
@@ -136,6 +136,139 @@ test({
       .get("/")
       .expect(500)
       .expect("Content-Type", "text/plain; charset=utf-8")
+      .expect("Internal Server Error");
+  },
+});
+
+test({
+  name: "when invalid err.status, not number, should respond 500",
+  async fn() {
+    const app = new App();
+
+    app.use((ctx, next) => {
+      ctx.body = "something else";
+      const err = new Error("some error") as any;
+      err.status = "notnumber";
+      throw err;
+    });
+
+    const server = app.listen();
+
+    await superdeno(server)
+      .get("/")
+      .expect(500)
+      .expect("Content-Type", "text/plain; charset=utf-8")
+      .expect("Internal Server Error");
+  },
+});
+
+test({
+  name: "when ENOENT error, should respond 404",
+  async fn() {
+    const app = new App();
+
+    app.use((ctx, next) => {
+      ctx.body = "something else";
+      const err = new Error("test for ENOENT") as any;
+      err.code = "ENOENT";
+      throw err;
+    });
+
+    const server = app.listen();
+
+    await superdeno(server)
+      .get("/")
+      .expect(404)
+      .expect("Content-Type", "text/plain; charset=utf-8")
+      .expect("Not Found");
+  },
+});
+
+test({
+  name: "not http status code, should respond 500",
+  async fn() {
+    const app = new App();
+
+    app.use((ctx, next) => {
+      ctx.body = "something else";
+      const err = new Error("some error") as any;
+      err.status = 9999;
+      throw err;
+    });
+    const server = app.listen();
+
+    await superdeno(server)
+      .get("/")
+      .expect(500)
+      .expect("Content-Type", "text/plain; charset=utf-8")
+      .expect("Internal Server Error");
+  },
+});
+
+test({
+  name:
+    "when error from another scope thrown, should handle it like a normal error",
+  async fn() {
+    const app = new App();
+
+    const error = Object.assign(new Error("boom"), {
+      status: 418,
+      expose: true,
+    });
+
+    app.use((ctx, next) => {
+      throw error;
+    });
+
+    const server = app.listen();
+
+    app.on("error", (receivedError: any) => {
+      assertStrictEquals(receivedError, error);
+    });
+
+    await superdeno(server)
+      .get("/")
+      .expect(418);
+  },
+});
+
+test({
+  name: "when non-error thrown, should response non-error thrown message",
+  async fn() {
+    const app = new App();
+
+    app.use((ctx, next) => {
+      throw "string error";
+    });
+
+    const server = app.listen();
+
+    await superdeno(server)
+      .get("/")
+      .expect(500)
+      .expect("Content-Type", "text/plain; charset=utf-8")
+      .expect("Internal Server Error");
+  },
+});
+
+test({
+  name: "should stringify error if it is an object",
+  async fn() {
+    const app = new App();
+
+    app.on("error", (err: any) => {
+      assertEquals(err, new Error('Error: non-error thrown: {"key":"value"}'));
+    });
+
+    app.use(async (ctx) => {
+      throw { key: "value" };
+    });
+
+    const server = app.listen();
+
+    await superdeno(server)
+      .get("/")
+      .expect(500)
       .expect("Internal Server Error");
   },
 });
