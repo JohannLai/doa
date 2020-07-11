@@ -123,16 +123,27 @@ export class Context {
    *    @param {Object} [props]
    */
   throw(...args: any[]): never {
-    let status, message, props;
+    let status = 500, message = "Bad Request", props;
 
-    switch (typeof args[0]) {
-      case "number":
-        ([status, message, props] = args);
-        break;
-      case "string":
-        ([message, status, props] = args);
-        break;
-    }
+    args.forEach((value) => {
+      switch (true) {
+        case typeof value == "object" && value instanceof Error:
+          message = value.message;
+          break;
+        case typeof value == "object" && !(value instanceof Error):
+          props = value;
+          break;
+        case typeof value === "string":
+          message = value;
+          break;
+        case typeof value === "number":
+          status = value;
+          break;
+        case typeof value === "number":
+          status = value;
+          break;
+      }
+    });
 
     throw createError(status, message, props);
   }
