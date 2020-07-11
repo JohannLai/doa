@@ -117,3 +117,25 @@ test({
       .expect("Not Found");
   },
 });
+
+test({
+  name: "when invalid err.statusCode not number, should respond 500",
+  async fn() {
+    const app = new App();
+
+    app.use((ctx, next) => {
+      ctx.body = "something else";
+      const err = new Error("some error") as any;
+      err.statusCode = "notnumber";
+      throw err;
+    });
+
+    const server = app.listen();
+
+    await superdeno(server)
+      .get("/")
+      .expect(500)
+      .expect("Content-Type", "text/plain; charset=utf-8")
+      .expect("Internal Server Error");
+  },
+});
