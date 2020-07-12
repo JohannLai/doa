@@ -17,8 +17,10 @@ export class Request {
   #proxy: boolean;
   #secure: boolean;
 
+  req: ServerRequest;
+
   constructor(request: ServerRequest, proxy = false, secure = false) {
-    this.#serverRequest = request;
+    this.#serverRequest = this.req = request;
     this.#proxy = proxy;
     this.#secure = secure;
 
@@ -42,6 +44,10 @@ export class Request {
    */
   get header(): Headers {
     return this.#serverRequest.headers;
+  }
+
+  set header(val) {
+    this.#serverRequest.headers = val;
   }
 
   /**
