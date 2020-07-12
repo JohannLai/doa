@@ -12,7 +12,7 @@ A middleware framework for Deno's http serve. Transplanted from Koa.
 
 </div>
 
-## ⚡️Quick start
+## ⚡️ Quick start
 
 A basic usage, responding to every request with *Hello World*;
 
@@ -50,13 +50,13 @@ app.listen({ port: 8000 });
 
 ```
 
-## 🧪Running tests
+## 🧪 Running tests
 
 ```bash
 $ deno test --allow-read --allow-write --allow-net --allow-hrtime  
 ```
 
-## 🚀Running benchmarks
+## 🚀 Running benchmarks
 Use [wrk](https://github.com/wg/wrk) to benchmark doa.
 
 ```bash
