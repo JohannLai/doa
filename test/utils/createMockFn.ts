@@ -46,3 +46,8 @@ export function createMockCtx() {
     new Response({ headers: new Headers() }),
   );
 }
+
+export function createMockRequest() {
+  const mockServerRequest = createMockServerRequest();
+  return new Request(mockServerRequest);
+}

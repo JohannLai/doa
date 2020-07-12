@@ -16,6 +16,7 @@ export class Request {
   #memoizedURL: URL | null = null;
   #proxy: boolean;
   #secure: boolean;
+  #accept: Accepts;
 
   req: ServerRequest;
 
@@ -23,6 +24,7 @@ export class Request {
     this.#serverRequest = this.req = request;
     this.#proxy = proxy;
     this.#secure = secure;
+    this.#accept = new Accepts(this.#serverRequest.headers);
 
     const proto = this.#serverRequest.proto.split("/")[0].toLowerCase();
     this.#url = new URL(
@@ -345,8 +347,8 @@ export class Request {
     return val.toLowerCase() === "xmlhttprequest";
   }
 
-  public accept(): string[] {
-    const accept = this.getAccept();
+  accepts(): string[] {
+    const accept = this.accept;
     return accept.types.apply(accept, arguments as any);
   }
 
@@ -371,29 +373,34 @@ export class Request {
     return ~~len;
   }
 
-  public acceptsCharsets(): string[] {
-    const accept = this.getAccept();
+  acceptsCharsets(): string[] {
+    const accept = this.accept;
     return accept.charsets.apply(accept, arguments as any);
   }
 
-  public acceptsEncodings(): string[] {
-    const accept = this.getAccept();
+  acceptsEncodings(): string[] {
+    const accept = this.accept;
     return accept.encodings.apply(accept, arguments as any);
   }
 
-  public acceptsLanguages(): string[] {
-    const accept = this.getAccept();
+  acceptsLanguages(): string[] {
+    const accept = this.accept;
     return accept.languages.apply(accept, arguments as any);
   }
 
-  private getAccept() {
-    return new Accepts(this.#serverRequest.headers);
+  get accept() {
+    return this.#accept ||
+      (this.#accept = new Accepts(this.#serverRequest.headers));
+  }
+
+  set accept(obj) {
+    this.#accept = obj;
   }
 
   /**
    * Inspect implementation.
    */
-  public inspect() {
+  inspect() {
     if (!this.#serverRequest) return;
     return this.toJSON();
   }
