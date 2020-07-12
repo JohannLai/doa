@@ -105,6 +105,17 @@ export class Context {
   }
 
   /**
+   * Assert condition，creates an HTTP error while provide http status
+   */
+  assert(value: any, status: number, message?: string, props?: object) {
+    if (value) {
+      return;
+    }
+
+    throw createError(status, message, props);
+  }
+
+  /**
    * Throw an error with `msg` and optional `status`
    * defaulting to 500. Note that these are user-level
    * errors, and the message may be exposed to the client.
