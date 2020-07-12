@@ -97,7 +97,7 @@ export function typeofrequest(
 
   // no body
   if (!hasBody(header)) {
-    return null;
+    return false;
   }
 
   // request content type

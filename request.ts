@@ -311,18 +311,17 @@ export class Request {
 
   /**
    * Check whether the response is one of the listed types.
-   * Pretty much the same as `this.request.is()`.
    *
    * @param {String|Array} types...
    * @return {String|false}
    * @api public
    */
   public is(types: string | string[]): string | boolean | null {
-    var arr = types;
+    let arr = types;
 
     if (!Array.isArray(types)) {
       arr = new Array(arguments.length);
-      for (var i = 0; i < arr.length; i++) {
+      for (let i = 0; i < arr.length; i++) {
         arr[i] = arguments[i];
       }
     }
