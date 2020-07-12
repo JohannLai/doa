@@ -56,6 +56,13 @@ app.listen({ port: 8000 });
 $ deno test --allow-read --allow-write --allow-net --allow-hrtime  
 ```
 
+## Running benchmarks
+Use [wrk](https://github.com/wg/wrk) to benchmark doa.
+
+```bash
+$  make -C benchmarks 
+```
+
 ## License
 
 [MIT](https://github.com/JohannLai/doa/blob/master/LICENSE)
