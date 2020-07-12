@@ -38,10 +38,11 @@ export function createMockServerRequest({
 }
 
 export function createMockCtx() {
+  const mockServerRequest = createMockServerRequest();
   return new Context(
     createMockApp(),
-    createMockServerRequest(),
-    new Request(createMockServerRequest()),
+    mockServerRequest,
+    new Request(mockServerRequest),
     new Response({ headers: new Headers() }),
   );
 }
