@@ -31,7 +31,7 @@ app.listen({ port: 8000 });
 
 Adding middlewares through `app.use(middleware)`, will cause all of the middlewares to be executed upon each request in the specified order. When you call the middleware, it passed the context and next method in the stack.
 
-A more complex example with responseTime middleware, which will add `x-response-time` in response header:
+A more complex example with responseTime middleware, which will add `x-response-time` in the response header:
 
 ```js
 import { App } from "https://deno.land/x/doa/mod.ts";
