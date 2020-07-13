@@ -7,6 +7,7 @@
 [![GitHub license](https://img.shields.io/github/license/JohannLai/doa)](https://github.com/JohannLai/doa/blob/master/LICENSE)
 [![tag](https://img.shields.io/badge/deno->=1.1.3-green.svg)](https://github.com/denoland/deno)
 [![tag](https://img.shields.io/badge/std-0.59.0-green.svg)](https://github.com/denoland/deno)
+![visitors](https://visitor-badge.glitch.me/badge?page_id=JohannLai.doa)
 
 A middleware framework for Deno's http serve. Transplanted from Koa.
 
