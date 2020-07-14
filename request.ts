@@ -347,9 +347,18 @@ export class Request {
     return val.toLowerCase() === "xmlhttprequest";
   }
 
-  accepts(): string[] {
-    const accept = this.accept;
-    return accept.types.apply(accept, arguments as any);
+  accepts(): string[] | undefined | boolean;
+  accepts(...types: string[]): string | string[] | undefined | boolean {
+    const res = this.accept.types(types);
+    if (res.length === 0) {
+      return false;
+    }
+
+    if (res.length === 1 && !!types.length) {
+      return res[0];
+    }
+
+    return res;
   }
 
   /**
