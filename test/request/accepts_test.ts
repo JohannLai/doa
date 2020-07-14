@@ -71,3 +71,35 @@ test({
     assertEquals(ctx.accepts("png"), false);
   },
 });
+
+test({
+  name:
+    "ctx.accepts(types), when an array is given, should return the first match",
+  async fn() {
+    const ctx = createMockCtx();
+
+    ctx.req.headers.set(
+      "accept",
+      "text/plain, text/html",
+    );
+
+    assertEquals(ctx.accepts(["png", "text", "html"]), "text");
+    assertEquals(ctx.accepts(["png", "html"]), "html");
+  },
+});
+
+test({
+  name:
+    "ctx.accepts(types), when multiple arguments are given, should return the first match",
+  async fn() {
+    const ctx = createMockCtx();
+
+    ctx.req.headers.set(
+      "accept",
+      "text/plain, text/html",
+    );
+
+    assertEquals(ctx.accepts("png", "text", "html"), "text");
+    assertEquals(ctx.accepts("png", "html"), "html");
+  },
+});
