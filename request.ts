@@ -347,23 +347,6 @@ export class Request {
     return val.toLowerCase() === "xmlhttprequest";
   }
 
-  accepts(): string[] | undefined | boolean;
-  accepts(...types: string[]): string | string[] | undefined | boolean {
-    types = Array.isArray(types[0]) ? types[0] : types;
-
-    const res = this.accept.types(types);
-
-    if (res.length === 0) {
-      return false;
-    }
-
-    if (res.length === 1 && !!types.length) {
-      return res[0];
-    }
-
-    return res;
-  }
-
   /**
    * Get the charset when present or empty.
    */
@@ -385,19 +368,73 @@ export class Request {
     return ~~len;
   }
 
-  acceptsCharsets(): string[] {
-    const accept = this.accept;
-    return accept.charsets.apply(accept, arguments as any);
+  accepts(): string[] | undefined | boolean;
+  accepts(...types: string[]): string | string[] | undefined | boolean {
+    types = Array.isArray(types[0]) ? types[0] : types;
+
+    const res = this.accept.types(types);
+
+    if (res.length === 0) {
+      return false;
+    }
+
+    if (res.length === 1 && !!types.length) {
+      return res[0];
+    }
+
+    return res;
+  }
+  acceptsCharsets(): string[] | undefined | boolean;
+  acceptsCharsets(...types: string[]): string | string[] | undefined | boolean {
+    types = Array.isArray(types[0]) ? types[0] : types;
+
+    const res = this.accept.charsets(types);
+
+    if (res.length === 0) {
+      return false;
+    }
+
+    if (res.length === 1 && !!types.length) {
+      return res[0];
+    }
+
+    return res;
   }
 
-  acceptsEncodings(): string[] {
-    const accept = this.accept;
-    return accept.encodings.apply(accept, arguments as any);
+  acceptsEncodings(
+    ...types: string[]
+  ): string | string[] | undefined | boolean {
+    types = Array.isArray(types[0]) ? types[0] : types;
+
+    const res = this.accept.encodings(types);
+
+    if (res.length === 0) {
+      return false;
+    }
+
+    if (res.length === 1 && !!types.length) {
+      return res[0];
+    }
+
+    return res;
   }
 
-  acceptsLanguages(): string[] {
-    const accept = this.accept;
-    return accept.languages.apply(accept, arguments as any);
+  acceptsLanguages(
+    ...types: string[]
+  ): string | string[] | undefined | boolean {
+    types = Array.isArray(types[0]) ? types[0] : types;
+
+    const res = this.accept.languages(types);
+
+    if (res.length === 0) {
+      return false;
+    }
+
+    if (res.length === 1 && !!types.length) {
+      return res[0];
+    }
+
+    return res;
   }
 
   get accept() {
