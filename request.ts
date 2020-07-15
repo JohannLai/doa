@@ -203,7 +203,7 @@ export class Request {
   * @todo write fresh function
   */
   get fresh() {
-    // write me
+    // TODO: write fresh method
     return false;
   }
 
