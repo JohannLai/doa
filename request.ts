@@ -168,11 +168,8 @@ export class Request {
    */
   get host(): string | null {
     let host = this.#proxy && this.get("X-Forwarded-Host");
-
     if (!host) host = this.get("Host");
-
     if (!host) return "";
-
     return host.split(/\s*,\s*/, 1)[0];
   }
 
