@@ -47,7 +47,7 @@ export function createMockCtx() {
   );
 }
 
-export function createMockRequest() {
+export function createMockRequest(proxy?: boolean) {
   const mockServerRequest = createMockServerRequest();
-  return new Request(mockServerRequest);
+  return new Request(mockServerRequest, proxy);
 }

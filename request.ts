@@ -167,7 +167,13 @@ export class Request {
    * proxy is enabled.
    */
   get host(): string | null {
-    return this.#serverRequest.headers.get("host");
+    let host = this.#proxy && this.get("X-Forwarded-Host");
+
+    if (!host) host = this.get("Host");
+
+    if (!host) return "";
+
+    return host.split(/\s*,\s*/, 1)[0];
   }
 
   /**

@@ -18,14 +18,18 @@ test({
   name: 'req.host, with no host present, should return ""',
   async fn() {
     const req = createMockRequest();
-    assert(req.host, "");
+    assertEquals(req.host, "");
   },
 });
 
 test({
-  name: 'req.host, with no host present, should return ""',
+  name:
+    "req.host, when X-Forwarded-Host is present, and proxy is not trusted, should be used on HTTP/1",
   async fn() {
-    const req = createMockRequest();
-    assert(req.host, "");
+    const req = createMockRequest(true);
+
+    req.headers.set("x-forwarded-host", "bar.com, baz.com");
+    req.headers.set("host", "bar.com");
+    assertEquals(req.host, "bar.com");
   },
 });
