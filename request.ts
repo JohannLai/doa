@@ -12,8 +12,8 @@ type Query = { [key: string]: string | string[] };
 
 export class Request {
   #serverRequest: ServerRequest;
-  #url: URL;
   #memoizedURL: URL | null = null;
+  #url?: URL;
   #proxy: boolean;
   #secure: boolean;
   #accept: Accepts;
@@ -26,12 +26,19 @@ export class Request {
     this.#secure = secure;
     this.#accept = new Accepts(this.#serverRequest.headers);
 
-    const proto = this.#serverRequest.proto.split("/")[0].toLowerCase();
-    this.#url = new URL(
-      `${proto}://${
-        this.#serverRequest.headers.get("host")
-      }${this.#serverRequest.url}`,
-    );
+    let proto: string;
+    let host: string;
+
+    if (this.#proxy) {
+      proto = this.#serverRequest
+        .headers.get("x-forwarded-proto")?.split(/\s*,\s*/, 1)[0] ??
+        "http";
+      host = this.#serverRequest.headers.get("x-forwarded-host") ??
+        this.#serverRequest.headers.get("host") ?? "";
+    } else {
+      proto = this.#secure ? "https" : "http";
+      host = this.#serverRequest.headers.get("host") ?? "";
+    }
   }
 
   get hasBody(): boolean {
@@ -63,12 +70,29 @@ export class Request {
     this.#serverRequest.headers = val;
   }
 
-  get url(): string {
-    return this.#serverRequest.url;
+  get url(): URL {
+    if (!this.#url) {
+      const serverRequest = this.#serverRequest;
+      let proto: string;
+      let host: string;
+      if (this.#proxy) {
+        proto = serverRequest
+          .headers.get("x-forwarded-proto")?.split(/\s*,\s*/, 1)[0] ??
+          "http";
+        host = serverRequest.headers.get("x-forwarded-host") ??
+          serverRequest.headers.get("host") ?? "";
+      } else {
+        proto = this.#secure ? "https" : "http";
+        host = serverRequest.headers.get("host") ?? "";
+      }
+      this.#url = new URL(`${proto}://${host}${serverRequest.url}`);
+    }
+
+    return this.#url;
   }
 
-  set url(val) {
-    this.#serverRequest.url = val;
+  set url(val: URL) {
+    this.url = this.#url = val;
   }
 
   /**
@@ -102,17 +126,15 @@ export class Request {
    * Set pathname, retaining the query-string when present.
    */
   get path(): string {
-    const url = new URL(this.url);
-    return url.pathname;
+    return this.url.pathname;
   }
 
   set path(path: string) {
-    const url = new URL(this.url);
-    if (url.pathname === path) {
+    if (this.url.pathname === path) {
       return;
     }
-    url.pathname = path;
-    this.#serverRequest.url = `${path}${url.search}`;
+    this.url.pathname = path;
+    this.#serverRequest.url = `${path}${this.url.search}`;
   }
 
   /**
@@ -122,7 +144,7 @@ export class Request {
   get query(): Query {
     const query: Query = {};
 
-    for (let [k, v] of new URLSearchParams(this.#url.search) as any) {
+    for (let [k, v] of new URLSearchParams(this.url.search) as any) {
       if (Array.isArray(query[k])) {
         query[k] = [...query[k], v];
       } else if (typeof query[k] === "string") {
@@ -137,24 +159,21 @@ export class Request {
 
   get querystring(): string {
     if (!(this as any).req) return "";
-    const url = new URL(this.url);
-    if (url.search.length >= 1) {
-      return url.search.slice(1);
+    if (this.url.search.length >= 1) {
+      return this.url.search.slice(1);
     } else {
       return "";
     }
   }
 
   set querystring(str: string) {
-    const url = new URL(this.url);
-    if (url.search === `?${str}`) return;
-    url.search = `?${str}`;
-    this.url = `${url.pathname}?${str}`;
+    if (this.url.search === `?${str}`) return;
+    this.url.search = `?${str}`;
+    this.url = new URL(`${this.url.pathname}?${str}`);
   }
 
   get search(): string {
-    const url = new URL(this.url);
-    return url.search;
+    return this.url.search;
   }
 
   set search(str: string) {
@@ -181,7 +200,11 @@ export class Request {
   get hostname() {
     const host = this.host;
     if (!host) return "";
-    if ("[" == host[0]) return this.#url.hostname || "";
+
+    if ("[" === host[0]) {
+      return this.url.hostname || "";
+    }
+
     return host.split(":", 1)[0];
   }
 
@@ -235,7 +258,7 @@ export class Request {
   }
 
   get originalUrl(): string {
-    return this.url;
+    return this.#serverRequest.url;
   }
 
   get cookies(): Cookies {
@@ -243,7 +266,7 @@ export class Request {
   }
 
   get protocol(): string {
-    return this.#url.protocol.split(":")[0];
+    return this.url.protocol.split(":")[0];
   }
 
   /**
