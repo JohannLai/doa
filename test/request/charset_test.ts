@@ -2,10 +2,8 @@ import {
   test,
   assertEquals,
   assert,
-  Accepts as Accept,
 } from "../test_deps.ts";
-import { Request } from "../../request.ts";
-import { createMockCtx, createMockRequest } from "../utils/createMockFn.ts";
+import { createMockRequest } from "../utils/createMockFn.ts";
 
 test({
   name: '"req.charset, with no content-type present, should return ""',
