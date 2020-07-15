@@ -349,9 +349,7 @@ export class Request {
 
   accepts(): string[] | undefined | boolean;
   accepts(...types: string[]): string | string[] | undefined | boolean {
-    if (Array.isArray(types[0])) {
-      types = types[0];
-    }
+    types = Array.isArray(types[0]) ? types[0] : types;
 
     const res = this.accept.types(types);
 
