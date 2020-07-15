@@ -103,3 +103,54 @@ test({
     assertEquals(ctx.accepts("png", "html"), "html");
   },
 });
+
+test({
+  name:
+    "ctx.accepts(types), when present in Accept as an exact match, should return the type",
+  async fn() {
+    const ctx = createMockCtx();
+
+    ctx.req.headers.set(
+      "accept",
+      "text/plain, text/html",
+    );
+
+    assertEquals(ctx.accepts("text/html"), "text/html");
+    assertEquals(ctx.accepts("text/plain"), "text/plain");
+  },
+});
+
+test({
+  name:
+    "ctx.accepts(types), when present in Accept as a type match, should return the type",
+  async fn() {
+    const ctx = createMockCtx();
+
+    ctx.req.headers.set(
+      "accept",
+      "application/json, */*",
+    );
+
+    assertEquals(ctx.accepts("text/html"), "text/html");
+    assertEquals(ctx.accepts("text/plain"), "text/plain");
+    assertEquals(ctx.accepts("image/png"), "image/png");
+  },
+});
+
+test({
+  name:
+    "ctx.accepts(types), when present in Accept as a subtype match, should return the type",
+  async fn() {
+    const ctx = createMockCtx();
+
+    ctx.req.headers.set(
+      "accept",
+      "application/json, text/*",
+    );
+
+    assertEquals(ctx.accepts("text/html"), "text/html");
+    assertEquals(ctx.accepts("text/plain"), "text/plain");
+    assertEquals(ctx.accepts("image/png"), false);
+    assertEquals(ctx.accepts("png"), false);
+  },
+});
