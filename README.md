@@ -51,6 +51,9 @@ app.listen({ port: 8000 });
 
 ```
 
+## 📑 docs
+For more informatio see https://koajs.com/.
+
 ## 🧪 Running tests
 
 ```bash
