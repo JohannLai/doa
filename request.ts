@@ -12,12 +12,12 @@ type Query = { [key: string]: string | string[] };
 
 export class Request {
   #serverRequest: ServerRequest;
-  #memoizedURL: URL | null = null;
   #url?: URL;
   #proxy: boolean;
   #secure: boolean;
   #accept: Accepts;
 
+  originalUrl: string;
   req: ServerRequest;
 
   constructor(request: ServerRequest, proxy = false, secure = false) {
@@ -25,6 +25,8 @@ export class Request {
     this.#proxy = proxy;
     this.#secure = secure;
     this.#accept = new Accepts(this.#serverRequest.headers);
+
+    this.originalUrl = this.#serverRequest.url;
 
     let proto: string;
     let host: string;
@@ -70,7 +72,18 @@ export class Request {
     this.#serverRequest.headers = val;
   }
 
-  get url(): URL {
+  get url() {
+    return this.#serverRequest.url;
+  }
+
+  set url(val: string) {
+    this.#serverRequest.url = val;
+  }
+
+  /**
+   * Get WHATWG parsed URL object.
+   */
+  get URL(): URL {
     if (!this.#url) {
       const serverRequest = this.#serverRequest;
       let proto: string;
@@ -85,14 +98,11 @@ export class Request {
         proto = this.#secure ? "https" : "http";
         host = serverRequest.headers.get("host") ?? "";
       }
+
       this.#url = new URL(`${proto}://${host}${serverRequest.url}`);
     }
 
     return this.#url;
-  }
-
-  set url(val: URL) {
-    this.url = this.#url = val;
   }
 
   /**
@@ -126,15 +136,15 @@ export class Request {
    * Set pathname, retaining the query-string when present.
    */
   get path(): string {
-    return this.url.pathname;
+    return this.URL.pathname;
   }
 
   set path(path: string) {
-    if (this.url.pathname === path) {
+    if (this.URL.pathname === path) {
       return;
     }
-    this.url.pathname = path;
-    this.#serverRequest.url = `${path}${this.url.search}`;
+    this.URL.pathname = path;
+    this.#serverRequest.url = `${path}${this.URL.search}`;
   }
 
   /**
@@ -144,7 +154,7 @@ export class Request {
   get query(): Query {
     const query: Query = {};
 
-    for (let [k, v] of new URLSearchParams(this.url.search) as any) {
+    for (let [k, v] of new URLSearchParams(this.URL.search) as any) {
       if (Array.isArray(query[k])) {
         query[k] = [...query[k], v];
       } else if (typeof query[k] === "string") {
@@ -159,21 +169,21 @@ export class Request {
 
   get querystring(): string {
     if (!(this as any).req) return "";
-    if (this.url.search.length >= 1) {
-      return this.url.search.slice(1);
+    if (this.URL.search.length >= 1) {
+      return this.URL.search.slice(1);
     } else {
       return "";
     }
   }
 
   set querystring(str: string) {
-    if (this.url.search === `?${str}`) return;
-    this.url.search = `?${str}`;
-    this.url = new URL(`${this.url.pathname}?${str}`);
+    if (this.URL.search === `?${str}`) return;
+    this.URL.search = `?${str}`;
+    this.url = `${this.URL.pathname}?${str}`;
   }
 
   get search(): string {
-    return this.url.search;
+    return this.URL.search;
   }
 
   set search(str: string) {
@@ -202,24 +212,10 @@ export class Request {
     if (!host) return "";
 
     if ("[" === host[0]) {
-      return this.url.hostname || "";
+      return this.URL.hostname || "";
     }
 
     return host.split(":", 1)[0];
-  }
-
-  /**
-   * Get WHATWG parsed URL object.
-   */
-  get URL(): URL | null {
-    if (this.#memoizedURL == undefined) {
-      try {
-        this.#memoizedURL = new URL(this.href);
-      } catch (err) {
-        this.#memoizedURL = null;
-      }
-    }
-    return this.#memoizedURL;
   }
 
   /**
@@ -257,16 +253,12 @@ export class Request {
     return this.#serverRequest.conn;
   }
 
-  get originalUrl(): string {
-    return this.#serverRequest.url;
-  }
-
   get cookies(): Cookies {
     return getCookies(this.#serverRequest);
   }
 
   get protocol(): string {
-    return this.url.protocol.split(":")[0];
+    return this.URL.protocol.split(":")[0];
   }
 
   /**

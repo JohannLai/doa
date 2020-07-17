@@ -18,7 +18,7 @@ export function createMockApp(): App {
 }
 
 export function createMockServerRequest({
-  url = "/",
+  url = "/users/1?next=/dashboard",
   proto = "HTTP/1.1",
   headers: headersInit = [["cache-control", "max-age=0"]],
 }: MockServerOptions = {}): ServerRequest {
