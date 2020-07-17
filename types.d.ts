@@ -8,7 +8,8 @@ export type HTTPMethods =
   | "PUT"
   | "PATCH"
   | "POST"
-  | "DELETE";
+  | "DELETE"
+  | "TRACE";
 
 export type DefaultStateExtends = any;
 

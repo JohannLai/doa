@@ -6,7 +6,7 @@ import {
 import { createMockCtx } from "../utils/createMockFn.ts";
 
 test({
-  name: "req.href, should return the full request url'",
+  name: "req.href, should return the full request url",
   async fn() {
     const ctx = createMockCtx();
     ctx.req.headers.set("host", "localhost");
