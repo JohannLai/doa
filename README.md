@@ -52,7 +52,7 @@ app.listen({ port: 8000 });
 ```
 
 ## 📑 docs
-For more informatio see https://koajs.com/.
+For more information see https://koajs.com/.
 
 ## 🧪 Running tests
 
