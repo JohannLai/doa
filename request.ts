@@ -78,6 +78,7 @@ export class Request {
 
   set url(val: string) {
     this.#serverRequest.url = val;
+    this.#url = new URL(`${this.protocol}://${this.host}${val}`);
   }
 
   /**

@@ -69,6 +69,7 @@ export class Context {
       .access("url")
       .access("accept")
       .getter("origin")
+      .getter("originalUrl")
       .getter("href")
       .getter("subdomains")
       .getter("protocol")
