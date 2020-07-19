@@ -476,10 +476,10 @@ export class Request {
    * Return JSON representation.
    */
   public toJSON() {
-    return [
-      this.method,
-      this.url,
-      this.header,
-    ];
+    return {
+      method: this.method,
+      url: this.url,
+      header: this.header,
+    };
   }
 }
