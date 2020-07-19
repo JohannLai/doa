@@ -11,6 +11,7 @@ interface MockServerOptions {
   headers?: [string, string][];
   proto?: string;
   url?: string;
+  conn?: any;
 }
 
 export function createMockApp(): App {
@@ -21,12 +22,13 @@ export function createMockServerRequest({
   url = "/users/1?next=/dashboard",
   proto = "HTTP/1.1",
   headers: headersInit = [["cache-control", "max-age=0"]],
+  conn = {
+    close() {},
+  },
 }: MockServerOptions = {}): ServerRequest {
   const headers = new Headers(headersInit);
   return {
-    conn: {
-      close() {},
-    },
+    conn,
     r: new BufReader(new Deno.Buffer(new Uint8Array())),
     w: new BufWriter(new Deno.Buffer(new Uint8Array())),
     headers,
