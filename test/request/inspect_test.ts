@@ -3,7 +3,6 @@ import {
   assert,
   assertEquals,
 } from "../test_deps.ts";
-import { HTTPMethods } from "../../types.d.ts";
 import { createMockRequest } from "../utils/createMockFn.ts";
 
 test({
