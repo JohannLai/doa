@@ -6,7 +6,7 @@ import {
 import { createMockCtx } from "../utils/createMockFn.ts";
 
 test({
-  name: "req.host, should return host with port",
+  name: "req.origin, should return the origin of url",
   async fn() {
     const ctx = createMockCtx();
     ctx.header.set("host", "localhost");
