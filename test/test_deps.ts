@@ -19,6 +19,10 @@ export {
   assertThrows,
   assertThrowsAsync,
 } from "https://deno.land/std@0.59.0/testing/asserts.ts";
+export {
+  stringify as qsStringify,
+  parse as qsParse,
+} from "https://deno.land/std@0.59.0/node/querystring.ts";
 
 export { superdeno } from "https://deno.land/x/superdeno@1.6.0/mod.ts";
 export { Accepts } from "https://deno.land/x/accepts@1.0.0/mod.ts";
