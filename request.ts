@@ -3,6 +3,7 @@ import {
   getCookies,
   Cookies,
   Accepts,
+  qsStringify,
   parse as contentTypeParse,
 } from "./deps.ts";
 import { typeofrequest } from "./utils/typeIs.ts";
@@ -166,6 +167,10 @@ export class Request {
     }
 
     return query;
+  }
+
+  set query(obj: Query) {
+    this.querystring = qsStringify(obj);
   }
 
   get querystring(): string {
