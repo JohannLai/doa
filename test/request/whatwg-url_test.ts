@@ -6,7 +6,7 @@ import {
 import { createMockRequest } from "../utils/createMockFn.ts";
 
 test({
-  name: "req.type, should return type void of parameters",
+  name: "req.URL, should not throw when host is void",
   async fn() {
     const req = createMockRequest();
     req.URL;
@@ -14,7 +14,7 @@ test({
 });
 
 test({
-  name: "req.type, should return type void of parameters",
+  name: "req.URL, should not throw when header.host is invalid",
   async fn() {
     const req = createMockRequest();
     req.header.set("host", "invalid host");
@@ -23,7 +23,7 @@ test({
 });
 
 test({
-  name: "req.type, should return type void of parameters",
+  name: "req.URL, should return empty object when invalid",
   async fn() {
     const req = createMockRequest();
     req.header.set("host", "invalid host");
