@@ -4,6 +4,7 @@ import {
   Cookies,
   Accepts,
   qsStringify,
+  qsParse,
   parse as contentTypeParse,
 } from "./deps.ts";
 import { typeofrequest } from "./utils/typeIs.ts";
@@ -184,12 +185,13 @@ export class Request {
 
   set querystring(str: string) {
     if (this.URL.search === `?${str}`) return;
-    this.URL.search = `?${str}`;
-    this.url = `${this.URL.pathname}?${str}`;
+    this.URL.search = str;
+
+    this.url = `${this.URL.pathname}?${this.URL.search.slice(1)}`;
   }
 
   get search(): string {
-    return this.URL.search;
+    return `?${this.querystring}`;
   }
 
   set search(str: string) {
