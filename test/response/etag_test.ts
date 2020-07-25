@@ -5,7 +5,7 @@ import {
 import { createMockResponse } from "../utils/createMockFn.ts";
 
 test({
-  name: "res.body=, when Content-Type is set, should not override",
+  name: "res.etag=, when Content-Type is set, should not override",
   async fn() {
     const res = createMockResponse();
 
