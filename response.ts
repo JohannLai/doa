@@ -127,7 +127,7 @@ export class Response {
     const { body } = this;
     if (!body || isReader(body)) return undefined;
     if ("string" === typeof body) return byteLength(body);
-    // if (body instanceof Uint8Array) return body.byteLength;
+    if (body instanceof Uint8Array) return body.byteLength;
     return byteLength(JSON.stringify(body));
   }
 
