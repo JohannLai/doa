@@ -39,6 +39,16 @@ export function createMockServerRequest({
   } as any;
 }
 
+export function createMockRequest(proxy?: boolean, secure?: boolean) {
+  const mockServerRequest = createMockServerRequest();
+  return new Request(mockServerRequest, proxy, secure);
+}
+
+export function createMockResponse() {
+  const mockServerRequest = createMockServerRequest();
+  return new Response(mockServerRequest);
+}
+
 export function createMockCtx() {
   const mockServerRequest = createMockServerRequest();
   return new Context(
@@ -47,9 +57,4 @@ export function createMockCtx() {
     new Request(mockServerRequest),
     new Response({ headers: new Headers() }),
   );
-}
-
-export function createMockRequest(proxy?: boolean, secure?: boolean) {
-  const mockServerRequest = createMockServerRequest();
-  return new Request(mockServerRequest, proxy, secure);
 }
