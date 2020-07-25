@@ -269,8 +269,10 @@ export class Response {
    * Check whether the response is one of the listed types.
    * Pretty much the same as `this.request.is()`.
    */
-  public is(types: string[]) {
-    return is(this.type, types);
+  public is(...types: string[] | string[][]): string | boolean | null {
+    let arr = Array.isArray(types[0]) ? types[0] : types;
+
+    return is(this.type, arr as string[]);
   }
 
   /**
