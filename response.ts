@@ -197,7 +197,7 @@ export class Response {
     // status
     if (!statusRedirect[this.status]) {
       this.status = 302;
-    }// html
+    } // html
 
     if (this.#request.accepts("html")) {
       url = escape(url);
