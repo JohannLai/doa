@@ -6,18 +6,28 @@ import {
   contentType,
   Response as ServerResponse,
 } from "./deps.ts";
+import { Request } from "./request.ts";
 import { is } from "./utils/typeIs.ts";
 import { isReader } from "./utils/isReader.ts";
 import { statusEmpty } from "./utils/statusEmpty.ts";
 import { statusRedirect } from "./utils/statusRedirect.ts";
 import { byteLength } from "./utils/byteLength.ts";
+import { escape } from "./utils/escape.ts";
 
 export class Response {
   [key: string]: any
 
+  #request: Request;
   #serverResponse: ServerResponse;
   #explicitStatus: Boolean = false;
   #writable = true;
+
+  constructor(request: Request) {
+    this.#request = request;
+    this.#serverResponse = this.res = {
+      headers: new Headers(),
+    };
+  }
 
   // @todo
   // get socket(): WebSocket | undefined {
@@ -179,14 +189,17 @@ export class Response {
    */
   redirect(url: string, alt?: string) {
     // location
-    if ("back" === url) url = (this as any).ctx.get("Referrer") || alt || "/";
+    if ("back" === url) {
+      url = this.#request.get("Referrer") || alt || "/";
+    }
     this.set("Location", encodeUrl(url));
 
     // status
-    if (!statusRedirect[this.status]) this.status = 302;
+    if (!statusRedirect[this.status]) {
+      this.status = 302;
+    }// html
 
-    // html
-    if ((this as any).ctx.accepts(["html"])) {
+    if (this.#request.accepts("html")) {
       url = escape(url);
       this.type = "text/html; charset=utf-8";
       this.body = `Redirecting to <a href="${url}">${url}</a>.`;
@@ -445,10 +458,5 @@ export class Response {
       body: this.body,
       headers,
     };
-  }
-
-  constructor(response: ServerResponse) {
-    this.res = response;
-    this.#serverResponse = response;
   }
 }
