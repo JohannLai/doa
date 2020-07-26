@@ -47,11 +47,11 @@ export class Response {
    * Get response status message
    */
   get message(): string {
-    return STATUS_TEXT.get(this.status) || "";
+    return this.res.statusMessage || STATUS_TEXT.get(this.status) || "";
   }
 
   set message(msg) {
-    // @todo
+    this.res.statusMessage = msg;
   }
 
   /**
@@ -448,6 +448,7 @@ export class Response {
   }
 
   constructor(response: ServerResponse) {
+    this.res = response;
     this.#serverResponse = response;
   }
 }
