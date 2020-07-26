@@ -394,7 +394,6 @@ export class Request {
     return ~~len;
   }
 
-  accepts(): string[] | undefined | boolean;
   accepts(...types: string[]): string | string[] | undefined | boolean {
     types = Array.isArray(types[0]) ? types[0] : types;
 
@@ -410,7 +409,7 @@ export class Request {
 
     return res;
   }
-  acceptsCharsets(): string[] | undefined | boolean;
+
   acceptsCharsets(...types: string[]): string | string[] | undefined | boolean {
     types = Array.isArray(types[0]) ? types[0] : types;
 
