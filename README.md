@@ -55,8 +55,12 @@ For more information see https://koajs.com/.
 
 ## 🧪 Running tests
 
+More than 190 test cases（over 90%） to ensure code quality.
+
 ```bash
 $ deno test --allow-read --allow-write --allow-net --allow-hrtime  
+
+# test result: ok. 191 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out 
 ```
 
 ## 🚀 Running benchmarks
@@ -65,6 +69,10 @@ Use [wrk](https://github.com/wg/wrk) to benchmark doa.
 ```bash
 $  make -C benchmarks 
 ```
+
+## 🎯 Trouble Shooting
+
+Make sure you are using **deno version 1.1.3** and **std 0.59.0.**  Doa will continue to update deno to the latest version later. 
 
 ## License
 
