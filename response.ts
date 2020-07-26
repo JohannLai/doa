@@ -46,6 +46,9 @@ export class Response {
       throw new Error("The response is not writable.");
     }
 
+    assert(Number.isInteger(code), "status code must be a number");
+    assert(code >= 100 && code <= 999, `invalid status code: ${code}`);
+
     this.#explicitStatus = true;
     this.#serverResponse.status = code;
     if (this.body && statusEmpty[code]) {
