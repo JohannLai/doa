@@ -55,7 +55,7 @@ For more information see https://koajs.com/.
 
 ## 🧪 Running tests
 
-More than 190 test cases（over 90%） to ensure code quality.
+More than 190 test cases（ over 90% ） to ensure code quality.
 
 ```bash
 $ deno test --allow-read --allow-write --allow-net --allow-hrtime  
