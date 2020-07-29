@@ -7,16 +7,13 @@
 
 import { HmacSha256, HmacSha512, base64url } from "../deps.ts";
 
-export enum Algorithm {
-  SHA256 = "sha256",
-  SHA512 = "sha512",
-}
+type Algorithm = "sha256" | "sha512";
 
 export class Keygrip {
   #keys: string[];
   #algorithm: Algorithm;
 
-  constructor(keys: string[], algorithm: Algorithm = Algorithm.SHA256) {
+  constructor(keys: string[], algorithm: Algorithm = "sha256") {
     if (!keys || !(0 in keys)) {
       throw new Error("Keys must be provided.");
     }
@@ -26,6 +23,42 @@ export class Keygrip {
   }
 
   sign(data: string, key?: string | number): string {
-    return "";
+    let buf: ArrayBuffer;
+    const sKey = (typeof key == "number" ? this.#keys[key] : key) ??
+      this.#keys[0];
+
+    switch (this.#algorithm) {
+      case "sha256":
+        buf = new HmacSha256(sKey).update(data).arrayBuffer();
+        break;
+
+      case "sha512":
+        buf = new HmacSha512(sKey).update(data).arrayBuffer();
+        break;
+    }
+
+    return base64url.encode(buf);
+  }
+
+  verify(data: string, digest: string): boolean {
+    return this.index(data, digest) != -1;
+  }
+
+  index(data: string, digest: string) {
+    for (var i = 0, l = this.#keys.length; i < l; i++) {
+      if (this.compare(digest, this.sign(data, this.#keys[i]))) {
+        return i;
+      }
+    }
+
+    return -1;
+  }
+
+  private compare(a: string, b: string): boolean {
+    const key = crypto.getRandomValues(new Uint8Array(32));
+    const ah = new HmacSha256(key).update(a).digest();
+    const bh = new HmacSha256(key).update(b).digest();
+
+    return ah.length === bh.length && ah.every((x, i) => x === bh[i]);
   }
 }
