@@ -20,6 +20,7 @@ app.use(async (ctx, next) => {
 // response
 app.use(async (ctx) => {
   ctx.status = 200;
+  ctx.cookies.set("name", "johannlai");
   ctx.set("x-user-name", "johann");
   ctx.body = "Hello World";
 });
