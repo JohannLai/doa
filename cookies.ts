@@ -85,7 +85,7 @@ export class Cookies {
     } = options;
 
     if (!this.#secure && secure) {
-      throw new Error("Cannot send secure cookie over unencrypted connection");
+      throw new Error("Cannot send secure cookie over unencrypted connection.");
     }
 
     if (maxAge && typeof maxAge == "string") {
@@ -115,6 +115,9 @@ export class Cookies {
       maxAge,
       expires,
     } as Cookie;
+
+    cookie.secure = secure ?? this.#secure;
+
     setCookie(this.#res, cookie);
 
     const signed = options.signed ?? !!this.#keys;
