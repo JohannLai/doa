@@ -15,12 +15,14 @@ import { compose } from "./compose.ts";
 interface ApplicationOptions {
   proxy?: boolean;
   env?: string;
+  keys?: string[];
 }
 
 export class App extends EventEmitter {
   server: Server | undefined;
   middleware: Middleware[] = [];
   silent: undefined | boolean = undefined;
+  keys: string[] | undefined;
   proxy: boolean = false;
   secure: boolean = false;
   env: string = "development";
@@ -33,7 +35,7 @@ export class App extends EventEmitter {
 
     if (options) {
       this.proxy = options.proxy ?? false;
-
+      this.keys = options.keys;
       if (options.env) {
         this.env = options.env;
       } else if (Deno.env.get("DENO_ENV") !== undefined) {

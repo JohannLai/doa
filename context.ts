@@ -3,17 +3,16 @@ import {
   ServerRequest,
   STATUS_TEXT,
   createError,
-  getCookies,
 } from "./deps.ts";
 import { Request } from "./request.ts";
 import { Response } from "./response.ts";
+import { Cookies } from "./cookies.ts";
 import { delegates } from "./utils/delegates.ts";
-
-const COOKIES = Symbol("context#cookies");
 
 export class Context {
   [key: string]: any
-  [COOKIES]: Object;
+
+  cookies: Cookies;
 
   public app: App;
   public request: Request;
@@ -33,7 +32,10 @@ export class Context {
     this.app = app;
     this.req = req;
     this.res = response;
-    this[COOKIES] = {};
+    this.cookies = new Cookies(this.req, this.res, {
+      keys: this.app.keys,
+      secure: this.request.secure,
+    });
 
     delegates(this, "response")
       .method("attachment")
@@ -211,16 +213,5 @@ export class Context {
     this.body = err.expose ? err.message : STATUS_TEXT.get(statusCode);
 
     this.req.respond(this.response.toServerResponse());
-  }
-
-  get cookies() {
-    if (!this[COOKIES]) {
-      this[COOKIES] = getCookies(this.req);
-    }
-    return this[COOKIES];
-  }
-
-  set cookies(cookies) {
-    this[COOKIES] = cookies;
   }
 }

@@ -15,8 +15,12 @@ export {
   STATUS_TEXT,
 } from "https://deno.land/std@0.59.0/http/http_status.ts";
 export {
-  getCookies,
   Cookies,
+  Cookie,
+  getCookies,
+  setCookie,
+  deleteCookie,
+  SameSite,
 } from "https://deno.land/std@0.59.0/http/cookie.ts";
 export { encoder } from "https://deno.land/std@0.59.0/encoding/utf8.ts";
 export { EventEmitter } from "https://deno.land/std@0.59.0/node/events.ts";
@@ -45,3 +49,4 @@ export {
 export { parse } from "https://deno.land/x/content_type/mod.ts";
 export { Accepts } from "https://deno.land/x/accepts@1.0.0/mod.ts";
 export { isIP } from "https://deno.land/x/isIP/mod.ts";
+export { ms } from "https://deno.land/x/ms/ms.ts";
