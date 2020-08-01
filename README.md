@@ -72,7 +72,7 @@ $  make -C benchmarks
 
 ## 🎯 Trouble Shooting
 
-Make sure you are using **deno version 1.1.3** and **std 0.59.0.**  Doa will continue to update deno to the latest version later. 
+Make sure you are using **deno 1.1.3** and **std 0.59.0.**  Doa will continue to update deno to the latest version later. 
 
 ## License
 
