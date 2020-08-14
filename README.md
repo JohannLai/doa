@@ -67,7 +67,7 @@ $ deno test --allow-read --allow-write --allow-net --allow-hrtime
 Use [wrk](https://github.com/wg/wrk) to benchmark doa.
 
 ```bash
-$  make -C benchmarks 
+$ make -C benchmarks 
 ```
 
 ## 🎯 Trouble Shooting
