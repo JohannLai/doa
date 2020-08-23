@@ -67,6 +67,7 @@ $ deno test --allow-read --allow-write --allow-net --allow-hrtime
 Use [wrk](https://github.com/wg/wrk) to benchmark doa.
 
 ```bash
+$ deno run --allow-net --allow-env  ./example.ts
 $ make -C benchmarks 
 ```
 
