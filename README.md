@@ -1,7 +1,4 @@
 <div align="center">
-<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
-<!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 <img src="/docs/logo.png" alt="Doa middleware framework for deno"/>
 
@@ -10,6 +7,9 @@
 [![GitHub license](https://img.shields.io/github/license/JohannLai/doa)](https://github.com/JohannLai/doa/blob/master/LICENSE)
 [![tag](https://img.shields.io/badge/deno-1.1.3-green.svg)](https://github.com/denoland/deno)
 [![tag](https://img.shields.io/badge/std-0.59.0-green.svg)](https://github.com/denoland/deno)
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 A middleware framework for Deno's http serve. Transplanted from Koa.
 
