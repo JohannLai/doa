@@ -1,0 +1,24 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "JohannLai",
+      "name": "JohannLai",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/10769405?v=4",
+      "profile": "https://github.com/JohannLai",
+      "contributions": [
+        "code"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "doa",
+  "projectOwner": "JohannLai",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "skipCi": true
+}
